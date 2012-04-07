@@ -26,8 +26,8 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Height="70" Width="70" Source="BusRoute.png" />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Number}" Width="35" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Route_short_name}" Width="35" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Route_long_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
