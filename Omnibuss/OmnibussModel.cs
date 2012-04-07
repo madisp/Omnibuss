@@ -64,8 +64,10 @@ namespace Omnibuss
                     where stop_time.Trip_id == trip.Trip_id
                     select stop_time.Stop_id
                 ).Count()
+                where trip.Route_id == route.Route_id
+                orderby sCount descending
                 select new { Trip = trip, Count = sCount };
-            return trips.Single().Trip;
+            return trips.Take(1).Single().Trip;
             //var trips =
             //    from trip in db.Trips
             //    join stop_time in db.Stop_times on trip.Trip_id equals stop_time.Trip_id into j1
