@@ -65,7 +65,7 @@ namespace Omnibuss
                 orderby grouped.Count() descending
                 select new { ParentId = grouped.Key, Count = grouped.Count() };
 
-            return (from trip in db.Trips where trip.Trip_id.Equals(trips.Single().ParentId)).Single();
+            return (from trip in db.Trips where trip.Trip_id.Equals(trips.Single().ParentId) select trip).Single();
         }
 
         public List<Stop> GetStopsByTrip(Trip trip)
