@@ -59,6 +59,7 @@ namespace Omnibuss
 
                 map1.Center = new GeoCoordinate(58.383333, 26.716667);
                 map1.ZoomLevel = 15;
+                map1.Mode = new MyMapMode();
                 var clusterer = new PushpinClusterer(map1, pins, this.Resources["ClusterTemplate"] as DataTemplate);
 
                 // get list of stops
@@ -187,6 +188,15 @@ namespace Omnibuss
             return pin;
         }
 
+    }
+
+    public class MyMapMode : Microsoft.Phone.Controls.Maps.RoadMode
+    {
+        public Range<double> MapZoomRange = new Range<double>(10.0, 100.0);
+        protected override Range<double> GetZoomRange(GeoCoordinate center)
+        {
+            return MapZoomRange;
+        }
     }
 
 }
