@@ -57,7 +57,8 @@ namespace Omnibuss
                 map1.Center = new GeoCoordinate(47.676289396624654, -122.12096571922302);
                 map1.ZoomLevel = 1;
 
-                addLocationPin(47.676289396624654, -122.12096571922302, new Uri("http://www.clker.com/cliparts/e/d/9/9/1206572112160208723johnny_automatic_NPS_map_pictographs_part_67.svg.med.png"));
+                Pushpin pin = addLocationPin(47.676289396624654, -122.12096571922302, new Uri("http://www.clker.com/cliparts/e/d/9/9/1206572112160208723johnny_automatic_NPS_map_pictographs_part_67.svg.med.png"));
+                pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
             }
         }
 
@@ -121,6 +122,8 @@ namespace Omnibuss
         void myLocation_Click(object sender, MouseButtonEventArgs e)
         {
             Debug.WriteLine("Siin ma olengi :)");
+            Pushpin pin = (Pushpin)sender;
+            pin.Content = "Juuuuhuuuu!";
         }
 
         Pushpin addLocationPin(double latitude, double longitude, Uri uri)
@@ -137,13 +140,7 @@ namespace Omnibuss
             };
 
             //---draw an ellipse inside the pushpin and fill it with the image---
-            pin.Content = new Ellipse()
-            {
-                Fill = image,
-                StrokeThickness = 10,
-                Height = 50,
-                Width = 50
-            };
+            pin.Content = "tere";
 
             //---add the pushpin to the map---
             map1.Children.Add(pin);
