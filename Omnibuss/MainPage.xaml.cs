@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using Microsoft.Phone.Controls.Maps.Platform;
 using System.Globalization;
+using MarkerClustering;
+using System.Windows;
 
 namespace Omnibuss
 {
@@ -58,13 +60,15 @@ namespace Omnibuss
 
                 map1.Center = new GeoCoordinate(58.383333, 26.716667);
                 map1.ZoomLevel = 15;
-                map1.ViewChangeEnd += new EventHandler<MapEventArgs>(MyMap_ViewChangeOnFrame);
                 map1.Children.Add(pinLayer);
+                var clusterer = new PushpinClusterer(map1, pins, this.Resources["ClusterTemplate"] as DataTemplate);
 
                 // get list of stops
                 OmnibussModel model = new OmnibussModel();
                 List<Stop> stops = model.GetStops();
                 Debug.WriteLine("Stops count: " + stops.Count);
+
+                map1.MouseLeftButtonUp += new MouseButtonEventHandler(Map_MouseLeftButtonUp);
 
                 foreach (Stop stop in stops)
                 {
@@ -77,19 +81,19 @@ namespace Omnibuss
                             NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=" + id, UriKind.Relative));
                         });
                 }
-                updateAllPins();
             }
         }
 
-        void MyMap_ViewChangeOnFrame(object sender, MapEventArgs e)
+        private void Map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            //Gets the map that raised this event
-            Map map = (Map)sender;
-            //Gets the bounded rectangle for the current frame
-            LocationRect bounds = map.BoundingRectangle;
-            //Update the current latitude and longitude
-            Debug.WriteLine("Map rect: " + map1.BoundingRectangle.West + ", " + map1.BoundingRectangle.East + " | " + map1.BoundingRectangle.North + ", " + map1.BoundingRectangle.South);
-            updateAllPins();
+            var fe = e.OriginalSource as FrameworkElement;
+
+            if (fe.DataContext is IEnumerable<object>)
+            {
+                Point point = e.GetPosition(map1);
+                map1.Center = map1.ViewportPointToLocation(point);
+                map1.ZoomLevel = map1.ZoomLevel + 1;
+            }
         }
 
         private void GetRoute(Location src, Location dst)
@@ -196,30 +200,9 @@ namespace Omnibuss
             pin.Location = new GeoCoordinate((double)latitude, (double)longitude);
             pin.Content = content;
             pins.Add(pin);
-            pinLayer.Children.Add(pin);
             return pin;
         }
 
-        void updateAllPins()
-        {
-            //pinLayer.Children.Clear();
-            foreach (Pushpin pin in pins)
-            {
-                if ((map1.BoundingRectangle.West <= pin.Location.Longitude && map1.BoundingRectangle.East >= pin.Location.Longitude && map1.BoundingRectangle.North >= pin.Location.Latitude && map1.BoundingRectangle.South <= pin.Location.Latitude))
-                {
-                    pin.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    pin.Visibility = System.Windows.Visibility.Collapsed;
-                }
-            }
-        }
     }
 
-    public class RoutePoint
-    {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-    }
 }
