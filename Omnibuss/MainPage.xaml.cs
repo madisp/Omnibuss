@@ -52,7 +52,7 @@ namespace Omnibuss
                 watcher.StatusChanged += new EventHandler<GeoPositionStatusChangedEventArgs>(watcher_StatusChanged);
                 watcher.Start();
 
-                map1.Center = new GeoCoordinate(58.383943, 26.717124);
+                map1.Center = new GeoCoordinate(58.383333, 26.716667);
                 map1.ZoomLevel = 15;
 
                 // get list of stops
@@ -161,11 +161,11 @@ namespace Omnibuss
 
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
+           // Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
 
-            map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
-            Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
-            pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
+           // map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
+           // Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
+           // pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
         }
 
         void myLocation_Click(object sender, MouseButtonEventArgs e)
