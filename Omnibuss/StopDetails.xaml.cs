@@ -33,6 +33,8 @@ namespace Omnibuss
             }
             UInt32 stopId = UInt32.Parse(idString);
             Debug.WriteLine("Stop id: " + stopId);
+
+            PageTitle.Text = "Stop #" + stopId.ToString();
         }
     }
 }

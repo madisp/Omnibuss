@@ -17,7 +17,6 @@ namespace Omnibuss
     public partial class MainPage : PhoneApplicationPage
     {
         GeoCoordinateWatcher watcher;
-        StopDTO lastStop;
 
         WebClient wc;
 
