@@ -18,6 +18,9 @@ namespace Omnibuss
 {
     public partial class StopDetailsPanoramaPage : PhoneApplicationPage
     {
+        List<Route> routes;
+        UInt32 stopId;
+
         public StopDetailsPanoramaPage()
         {
             InitializeComponent();
@@ -33,7 +36,7 @@ namespace Omnibuss
                 NavigationService.GoBack();
                 return;
             }
-            UInt32 stopId = UInt32.Parse(idString);
+            stopId = UInt32.Parse(idString);
             Debug.WriteLine("Stop id: " + stopId);
 
             OmnibussModel model = new OmnibussModel();
@@ -53,6 +56,21 @@ namespace Omnibuss
             pin.Content = content;
             map1.Children.Add(pin);
             return pin;
+        }
+
+        private void routeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedItem = (sender as ListBox).SelectedItem;
+            if (selectedItem == null)
+            {
+                return;
+            }
+            int index = (sender as ListBox).SelectedIndex;
+            (sender as ListBox).SelectedIndex = -1;
+
+            Route route = routes.ElementAt(index);
+
+            NavigationService.Navigate(new Uri("/RouteDetailsPanoramaPage.xaml?stopId=" + stopId + "&routeId=" + route.Id, UriKind.Relative));
         }
     }
 }
