@@ -23,9 +23,9 @@
                             <Grid.Background>
                                 <SolidColorBrush Color="{StaticResource PhoneAccentColor}" />
                             </Grid.Background>
-                            <TextBlock Name="LineNumber" VerticalAlignment="Center" Text="{Binding Number}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100" />
+                            <TextBlock Name="LineNumber" VerticalAlignment="Center" Text="{Binding Route_short_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100" />
                         </Grid>
-                        <TextBlock Name="LineName" VerticalAlignment="Center" Text="{Binding Name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100"/>
+                        <TextBlock Name="LineName" VerticalAlignment="Center" Text="{Binding Route_long_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100"/>
                     </StackPanel>
                 </DataTemplate>
             </controls:Panorama.TitleTemplate>
