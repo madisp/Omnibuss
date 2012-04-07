@@ -19,7 +19,8 @@ namespace Omnibuss
     {
         GeoCoordinateWatcher watcher;
 
-        WebClient wc;
+        MapLayer pinLayer = new MapLayer();
+        List<Pushpin> pins;
 
         // Constructor
         public MainPage()
@@ -28,10 +29,14 @@ namespace Omnibuss
 
             InitializeComponent();
 
-            // Create the WebClient and associate a handler with the OpenReadCompleted event.
-            wc = new WebClient();
-            wc.OpenReadCompleted += new OpenReadCompletedEventHandler(wc_OpenReadCompleted);
-            CallToWebService("58.383333", "26.716667", "58.383333", "26.816667");
+            pins = new List<Pushpin>();
+            Location src = new Location();
+            src.Latitude = 58.383333;
+            src.Longitude = 26.716667;
+            Location dst = new Location();
+            dst.Latitude = 58.383333;
+            dst.Longitude = 26.816667;
+            GetRoute(src, dst);
 
             if (watcher == null)
             {
@@ -53,6 +58,8 @@ namespace Omnibuss
 
                 map1.Center = new GeoCoordinate(58.383333, 26.716667);
                 map1.ZoomLevel = 15;
+                map1.ViewChangeEnd += new EventHandler<MapEventArgs>(MyMap_ViewChangeOnFrame);
+                map1.Children.Add(pinLayer);
 
                 // get list of stops
                 OmnibussModel model = new OmnibussModel();
@@ -62,7 +69,6 @@ namespace Omnibuss
                 foreach (Stop stop in stops)
                 {
                     Pushpin pin = addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
-
                     int id = stop.Id;
 
                     pin.MouseLeftButtonUp += new MouseButtonEventHandler(
@@ -71,76 +77,82 @@ namespace Omnibuss
                             NavigationService.Navigate(new Uri("/StopDetailsPanoramaPage.xaml?stopId=" + id, UriKind.Relative));
                         });
                 }
+                updateAllPins();
             }
         }
 
-        private void CallToWebService(string srcLatitude, string srcLongitude, string dstLatitude, string dstLongitude)
+        void MyMap_ViewChangeOnFrame(object sender, MapEventArgs e)
         {
-            // Call the OpenReadAsyc to make a get request, passing the url with the selected search string.
-            wc.OpenReadAsync(new Uri("http://dev.virtualearth.net/REST/V1/Routes/Driving?o=xml&rpo=Points&tl=0.00001&wp.0=" + srcLatitude + "," + srcLongitude + "&wp.1=" + dstLatitude + "," + dstLongitude + "&key=Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"));
+            //Gets the map that raised this event
+            Map map = (Map)sender;
+            //Gets the bounded rectangle for the current frame
+            LocationRect bounds = map.BoundingRectangle;
+            //Update the current latitude and longitude
+            Debug.WriteLine("Map rect: " + map1.BoundingRectangle.West + ", " + map1.BoundingRectangle.East + " | " + map1.BoundingRectangle.North + ", " + map1.BoundingRectangle.South);
+            updateAllPins();
         }
-        void wc_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+
+        private void GetRoute(Location src, Location dst)
         {
-            XElement resultXml;
-            // You should always check to see if an error occurred. In this case, the application
-            // simply returns.
-            if (e.Error != null)
+            // Create the service variable and set the callback method using the CalculateRouteCompleted property.
+            RouteService.RouteServiceClient routeService = new RouteService.RouteServiceClient("BasicHttpBinding_IRouteService");
+            routeService.CalculateRouteCompleted += new EventHandler<RouteService.CalculateRouteCompletedEventArgs>(routeService_CalculateRouteCompleted);
+
+            // Set the token.
+            RouteService.RouteRequest routeRequest = new RouteService.RouteRequest();
+            routeRequest.Credentials = new Credentials();
+            routeRequest.Credentials.ApplicationId = ((ApplicationIdCredentialsProvider)map1.CredentialsProvider).ApplicationId;
+
+            // Return the route points so the route can be drawn.
+            routeRequest.Options = new RouteService.RouteOptions();
+            routeRequest.Options.RoutePathType = RouteService.RoutePathType.Points;
+
+            routeRequest.Waypoints = new System.Collections.ObjectModel.ObservableCollection<RouteService.Waypoint>();
+            RouteService.Waypoint srcWaypoint = new RouteService.Waypoint();
+            srcWaypoint.Location = src;
+            RouteService.Waypoint dstWaypoint = new RouteService.Waypoint();
+            dstWaypoint.Location = dst;
+            routeRequest.Waypoints.Add(srcWaypoint);
+            routeRequest.Waypoints.Add(dstWaypoint);
+
+            // Make the CalculateRoute asnychronous request.
+            routeService.CalculateRouteAsync(routeRequest);
+
+        }
+
+        private void routeService_CalculateRouteCompleted(object sender, RouteService.CalculateRouteCompletedEventArgs e)
+        {
+
+            // If the route calculate was a success and contains a route, then draw the route on the map.
+            if ((e.Result.ResponseSummary.StatusCode == RouteService.ResponseStatusCode.Success) & (e.Result.Result.Legs.Count != 0))
             {
-                return;
-            }
-            else
-            {
-                XNamespace web = "http://schemas.microsoft.com/search/local/ws/rest/v1";
-                try
+                // Set properties of the route line you want to draw.
+                Color routeColor = Colors.Blue;
+                SolidColorBrush routeBrush = new SolidColorBrush(routeColor);
+                MapPolyline routeLine = new MapPolyline();
+                routeLine.Locations = new LocationCollection();
+                routeLine.Stroke = routeBrush;
+                routeLine.Opacity = 0.65;
+                routeLine.StrokeThickness = 5.0;
+
+                // Retrieve the route points that define the shape of the route.
+                foreach (Location p in e.Result.Result.RoutePath.Points)
                 {
-                    List<RoutePoint> routePoints = new List<RoutePoint>();
-                    resultXml = XElement.Load(e.Result);
-
-                    var points = from item
-                                in resultXml.Descendants(web + "Line").ElementAt(0).Descendants(web + "Point")
-                                 select item;
-                    foreach (XElement item in points)
-                    {
-                        RoutePoint result = new RoutePoint();
-
-                        string latitude = item.Descendants(web + "Latitude").ToArray().ElementAt(0).Value;
-                        string longitude = item.Descendants(web + "Longitude").ToArray().ElementAt(0).Value;
-
-                        result.Latitude = Double.Parse(latitude, CultureInfo.InvariantCulture);
-                        result.Longitude = Double.Parse(longitude, CultureInfo.InvariantCulture);
-                        Debug.WriteLine("POINT: " + result.Latitude + ", " + result.Longitude);
-                        routePoints.Add(result);
-                    }
-
-
-                    routeLoaded(routePoints);
-
-
+                    Location location = new Location();
+                    location.Latitude = p.Latitude;
+                    location.Longitude = p.Longitude;
+                    routeLine.Locations.Add(location);
                 }
-                catch (System.Xml.XmlException ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
+
+                // Add a map layer in which to draw the route.
+                MapLayer myRouteLayer = new MapLayer();
+                map1.Children.Add(myRouteLayer);
+
+                // Add the route line to the new layer.
+                myRouteLayer.Children.Add(routeLine);
+
+
             }
-
-        }
-
-        void routeLoaded(List<RoutePoint> points)
-        {
-            // OH IT'S SO AWESOME
-            MapPolyline polyLine;
-            polyLine = new MapPolyline();
-            polyLine.Stroke = new SolidColorBrush(Colors.Blue);
-            polyLine.StrokeThickness = 5;
-            polyLine.Opacity = 0.7;
-            polyLine.Locations = new LocationCollection();
-
-            foreach (RoutePoint point in points)
-            {
-                polyLine.Locations.Add(new GeoCoordinate(point.Latitude, point.Longitude));
-            }
-
-            map1.Children.Add(polyLine);
         }
 
         void watcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
@@ -164,11 +176,11 @@ namespace Omnibuss
 
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-           // Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
+            // Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
 
-           // map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
-           // Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
-           // pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
+            // map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
+            // Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
+            // pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
         }
 
         void myLocation_Click(object sender, MouseButtonEventArgs e)
@@ -183,8 +195,25 @@ namespace Omnibuss
             Pushpin pin = new Pushpin();
             pin.Location = new GeoCoordinate((double)latitude, (double)longitude);
             pin.Content = content;
-            map1.Children.Add(pin);
+            pins.Add(pin);
+            pinLayer.Children.Add(pin);
             return pin;
+        }
+
+        void updateAllPins()
+        {
+            //pinLayer.Children.Clear();
+            foreach (Pushpin pin in pins)
+            {
+                if ((map1.BoundingRectangle.West <= pin.Location.Longitude && map1.BoundingRectangle.East >= pin.Location.Longitude && map1.BoundingRectangle.North >= pin.Location.Latitude && map1.BoundingRectangle.South <= pin.Location.Latitude))
+                {
+                    pin.Visibility = System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    pin.Visibility = System.Windows.Visibility.Collapsed;
+                }
+            }
         }
     }
 
