@@ -23,15 +23,15 @@
                             <Grid.Background>
                                 <SolidColorBrush Color="{StaticResource PhoneAccentColor}" />
                             </Grid.Background>
-                            <TextBlock Name="LineNumber" VerticalAlignment="Center" Text="{Binding Number}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100" />
+                            <TextBlock Name="LineNumber" VerticalAlignment="Center" Text="{Binding Route_short_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100" />
                         </Grid>
-                        <TextBlock Name="LineName" VerticalAlignment="Center" Text="{Binding Name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100"/>
+                        <TextBlock Name="LineName" VerticalAlignment="Center" Text="{Binding Route_long_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100"/>
                     </StackPanel>
                 </DataTemplate>
             </controls:Panorama.TitleTemplate>
 
             <!--Panorama item one-->
-            <controls:PanoramaItem Header="Schedule">
+            <controls:PanoramaItem Header="Graafik">
                 <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
                     <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" Name="schedule" VerticalAlignment="Top" Width="460">
                         <ListBox.ItemTemplate>
@@ -44,9 +44,9 @@
             </controls:PanoramaItem>
 
             <!--Panorama item two-->
-            <controls:PanoramaItem Header="Route">
+            <controls:PanoramaItem Header="Marsruut">
                 <Grid>
-                    <my:Map Height="601" ZoomLevel="15" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="456" />
+                    <my:Map Height="601" ZoomLevel="15" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="456" AnimationLevel="None" />
                 </Grid>
             </controls:PanoramaItem>
         </controls:Panorama>

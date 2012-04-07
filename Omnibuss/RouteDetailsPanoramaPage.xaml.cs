@@ -44,11 +44,12 @@ namespace Omnibuss
 
             UInt32 routeId = UInt32.Parse(idString);
             Debug.WriteLine("Route id: " + routeId);
-            Route route = new Route(1, "3A", "Möku - Nott");
-            Panorama.Title = route;
 
             OmnibussModel model = new OmnibussModel();
             Stop stop = model.GetStop(stopId);
+
+            Route route = model.GetRoute(routeId);
+            Panorama.Title = route;
 
             List<String> timesList = new List<String>();
             timesList.Add("12:00");
