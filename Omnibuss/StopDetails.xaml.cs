@@ -34,7 +34,11 @@ namespace Omnibuss
             UInt32 stopId = UInt32.Parse(idString);
             Debug.WriteLine("Stop id: " + stopId);
 
-            PageTitle.Text = "Stop #" + stopId.ToString();
+            OmnibussModel model = new OmnibussModel();
+            Stop stop = model.GetStop(stopId);
+            PageTitle.Text = stop.Name;
+
+            routeList.ItemsSource = model.GetRoutes();
         }
     }
 }

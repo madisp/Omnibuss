@@ -41,5 +41,23 @@ namespace Omnibuss
             }
             return null;
         }
+
+        public List<Route> GetRoutes()
+        {
+            List<Route> routes = new List<Route>();
+            routes.Add(new Route(1, "3A", "Möku - Nott"));
+            routes.Add(new Route(2, "1A", "Nott - Püssikas"));
+            routes.Add(new Route(3, "11", "Annesaun - Nott"));
+            routes.Add(new Route(4, "34", "Möku - Nõo baar"));
+            routes.Add(new Route(5, "2", "Atlantis - Nõo baar"));
+            routes.Add(new Route(6, "7", "Illukas - Nott"));
+            routes.Add(new Route(7, "3A", "Möku - Nott"));
+            routes.Add(new Route(8, "1A", "Nott - Püssikas"));
+            routes.Add(new Route(9, "11", "Annesaun - Nott"));
+            routes.Add(new Route(10, "34", "Möku - Nõo baar"));
+            routes.Add(new Route(11, "2", "Atlantis - Nõo baar"));
+            routes.Add(new Route(12, "7", "Illukas - Nott"));
+            return routes;
+        }
     }
 }

@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="OmnibussData.cs" />
     <Compile Include="OmnibussModel.cs" />
+    <Compile Include="Route.cs" />
     <Compile Include="StopDetails.xaml.cs">
       <DependentUpon>StopDetails.xaml</DependentUpon>
     </Compile>
@@ -109,6 +110,7 @@
     </Content>
     <Resource Include="mylocation.png" />
     <Resource Include="Bus.png" />
+    <Resource Include="BusRoute.png" />
     <Content Include="Omnibuss.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -11,7 +11,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Microsoft.Phone.Controls.Maps.Platform;
-using System.Globalization;
 
 namespace Omnibuss
 {
@@ -106,10 +105,8 @@ namespace Omnibuss
                         string latitude = item.Descendants(web + "Latitude").ToArray().ElementAt(0).Value;
                         string longitude = item.Descendants(web + "Longitude").ToArray().ElementAt(0).Value;
 
-                        Debug.WriteLine("win win '" + latitude +"'");
-
-                        result.Latitude = Double.Parse(latitude, CultureInfo.InvariantCulture);
-                        result.Longitude = Double.Parse(longitude, CultureInfo.InvariantCulture);
+                        result.Latitude = Double.Parse(latitude);
+                        result.Longitude = Double.Parse(longitude);
                         Debug.WriteLine("POINT: " + result.Latitude + ", " + result.Longitude);
                         routePoints.Add(result);
                     }

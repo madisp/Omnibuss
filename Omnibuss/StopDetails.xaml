@@ -23,11 +23,29 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock x:Name="ApplicationTitle" Text="OMNIBUSS" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <ScrollViewer>
+                <TextBlock TextWrapping="NoWrap" x:Name="PageTitle" Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            </ScrollViewer>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0"></Grid>
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <ListBox Height="100" HorizontalAlignment="Left" Margin="392,120,0,0" Name="routeList" VerticalAlignment="Top" Width="460">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Button>
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="BusRoute.png" />
+                                    <TextBlock Text="{Binding Number}"/>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
     </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->
