@@ -31,7 +31,7 @@
             <!--Panorama item one-->
             <controls:PanoramaItem Header="Peatused">
                 <Grid x:Name="MapPanel" Grid.Row="1">
-                    <my:Map Grid.Column="0" Height="601" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="436" />
+                    <my:Map Height="498" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="436" />
                 </Grid>
             </controls:PanoramaItem>
 

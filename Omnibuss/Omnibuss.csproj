@@ -130,6 +130,7 @@
     <None Include="Service References\RouteService\route.wsdl" />
     <None Include="Service References\RouteService\route.xsd" />
     <None Include="Service References\RouteService\service.xsd" />
+    <Resource Include="Bus_big.png" />
     <Content Include="Newtonsoft.Json.dll" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
