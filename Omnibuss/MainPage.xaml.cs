@@ -92,7 +92,7 @@ namespace Omnibuss
             {
                 Point point = e.GetPosition(map1);
                 map1.Center = map1.ViewportPointToLocation(point);
-                map1.ZoomLevel = map1.ZoomLevel + 1;
+                map1.ZoomLevel = map1.ZoomLevel + 3;
             }
         }
 
