@@ -21,6 +21,7 @@ namespace Omnibuss
     public partial class MainPage : PhoneApplicationPage
     {
         GeoCoordinateWatcher watcher;
+        StopDTO lastStop;
 
         String requestString = "http://dev.virtualearth.net/REST/V1/Routes/Driving?o=json&wp.0=lynnwood&wp.1=seattle&avoid=minimizeTolls&key=Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr";
         WebClient wc;
@@ -59,7 +60,9 @@ namespace Omnibuss
                 map1.ZoomLevel = 1;
 
                 Pushpin pin = addLocationPin(47.676289396624654, -122.12096571922302, "San Francsico");
-                pin.MouseLeftButtonUp += new MouseButtonEventHandler(stopLocation_Click);
+                pin.MouseLeftButtonUp += new MouseButtonEventHandler(delegate(object sender, MouseButtonEventArgs e) {
+                    NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=12", UriKind.Relative));
+                });
             }
         }
 
@@ -127,22 +130,11 @@ namespace Omnibuss
             pin.Content = "Juuuuhuuuu!";
         }
 
-        void stopLocation_Click(object sender, MouseButtonEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=", UriKind.Relative));
-        }
-
         Pushpin addLocationPin(double latitude, double longitude, object content)
         {
             Pushpin pin = new Pushpin();
-
-            //---set the location for the pushpin---
             pin.Location = new GeoCoordinate(latitude, longitude);
-
-            //---draw an ellipse inside the pushpin and fill it with the image---
             pin.Content = content;
-
-            //---add the pushpin to the map---
             map1.Children.Add(pin);
             return pin;
         }
