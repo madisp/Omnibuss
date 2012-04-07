@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using System.Device.Location;
 using Microsoft.Phone.Controls.Maps;
 using System.Diagnostics; //---for Debug.WriteLine()---
 using System.Xml.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Windows.Input;
+using Microsoft.Phone.Controls.Maps.Platform;
 
 namespace Omnibuss
 {
@@ -22,7 +19,6 @@ namespace Omnibuss
         GeoCoordinateWatcher watcher;
         StopDTO lastStop;
 
-        String requestString = "http://dev.virtualearth.net/REST/V1/Routes/Driving?o=json&wp.0=lynnwood&wp.1=seattle&avoid=minimizeTolls&key=Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr";
         WebClient wc;
 
         // Constructor
@@ -35,7 +31,7 @@ namespace Omnibuss
             // Create the WebClient and associate a handler with the OpenReadCompleted event.
             wc = new WebClient();
             wc.OpenReadCompleted += new OpenReadCompletedEventHandler(wc_OpenReadCompleted);
-            CallToWebService();
+            CallToWebService("58.383333", "26.716667", "58.383333", "26.816667");
 
             if (watcher == null)
             {
@@ -55,8 +51,8 @@ namespace Omnibuss
                 watcher.StatusChanged += new EventHandler<GeoPositionStatusChangedEventArgs>(watcher_StatusChanged);
                 watcher.Start();
 
-                map1.Center = new GeoCoordinate(47.676289396624654, -122.12096571922302);
-                map1.ZoomLevel = 1;
+                map1.Center = new GeoCoordinate(58.383333, 26.716667);
+                map1.ZoomLevel = 15;
 
                 // get list of stops
                 OmnibussModel model = new OmnibussModel();
@@ -78,10 +74,10 @@ namespace Omnibuss
             }
         }
 
-        private void CallToWebService()
+        private void CallToWebService(string srcLatitude, string srcLongitude, string dstLatitude, string dstLongitude)
         {
             // Call the OpenReadAsyc to make a get request, passing the url with the selected search string.
-            wc.OpenReadAsync(new Uri(requestString));
+            wc.OpenReadAsync(new Uri("http://dev.virtualearth.net/REST/V1/Routes/Driving?o=xml&rpo=Points&tl=0.00001&wp.0=" + srcLatitude + "," + srcLongitude + "&wp.1=" + dstLatitude + "," + dstLongitude + "&key=Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"));
         }
         void wc_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
         {
@@ -94,18 +90,57 @@ namespace Omnibuss
             }
             else
             {
-                XNamespace web = "http://schemas.microsoft.com/LiveSearch/2008/04/XML/web";
+                XNamespace web = "http://schemas.microsoft.com/search/local/ws/rest/v1";
                 try
                 {
+                    List<RoutePoint> routePoints = new List<RoutePoint>();
                     resultXml = XElement.Load(e.Result);
-                    Debug.WriteLine("Heihoo: " + resultXml.FirstNode.ToString());
+
+                    var points = from item
+                                in resultXml.Descendants(web + "Line").ElementAt(0).Descendants(web + "Point")
+                                 select item;
+                    foreach (XElement item in points)
+                    {
+                        RoutePoint result = new RoutePoint();
+
+                        string latitude = item.Descendants(web + "Latitude").ToArray().ElementAt(0).Value;
+                        string longitude = item.Descendants(web + "Longitude").ToArray().ElementAt(0).Value;
+
+                        result.Latitude = Double.Parse(latitude);
+                        result.Longitude = Double.Parse(longitude);
+                        Debug.WriteLine("POINT: " + result.Latitude + ", " + result.Longitude);
+                        routePoints.Add(result);
+                    }
+
+
+                    routeLoaded(routePoints);
+
+
                 }
                 catch (System.Xml.XmlException ex)
                 {
-
-
+                    Debug.WriteLine(ex.ToString());
                 }
             }
+
+        }
+
+        void routeLoaded(List<RoutePoint> points)
+        {
+            // OH IT'S SO AWESOME
+            MapPolyline polyLine;
+            polyLine = new MapPolyline();
+            polyLine.Stroke = new SolidColorBrush(Colors.Blue);
+            polyLine.StrokeThickness = 5;
+            polyLine.Opacity = 0.7;
+            polyLine.Locations = new LocationCollection();
+
+            foreach (RoutePoint point in points)
+            {
+                polyLine.Locations.Add(new GeoCoordinate(point.Latitude, point.Longitude));
+            }
+
+            map1.Children.Add(polyLine);
         }
 
         void watcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
@@ -129,10 +164,11 @@ namespace Omnibuss
 
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
-            map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
-            Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
-            pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
+           // Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
+
+           // map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
+           // Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
+           // pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
         }
 
         void myLocation_Click(object sender, MouseButtonEventArgs e)
@@ -150,5 +186,11 @@ namespace Omnibuss
             map1.Children.Add(pin);
             return pin;
         }
+    }
+
+    public class RoutePoint
+    {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
