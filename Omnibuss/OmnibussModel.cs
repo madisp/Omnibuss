@@ -41,5 +41,10 @@ namespace Omnibuss
                 orderby route.Route_short_name ascending
                 select route).Distinct().OrderBy(route => route.Route_short_name).ToList();
         }
+
+        public Route GetRoute(UInt32 id)
+        {
+            return (from Route route in db.Routes where route.Route_id.Equals(id) select route).Single();
+        }
     }
 }
