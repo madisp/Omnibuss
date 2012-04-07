@@ -76,7 +76,6 @@
     <Compile Include="OmnibussModel.cs" />
     <Compile Include="PushpinClusterer.cs" />
     <Compile Include="PushpinContainer.cs" />
-    <Compile Include="Route.cs" />
     <Compile Include="RouteDetailsPanoramaPage.xaml.cs">
       <DependentUpon>RouteDetailsPanoramaPage.xaml</DependentUpon>
     </Compile>

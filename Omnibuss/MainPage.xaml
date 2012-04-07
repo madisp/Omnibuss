@@ -15,7 +15,7 @@
 
     <phone:PhoneApplicationPage.Resources>
         <DataTemplate x:Key="ClusterTemplate">
-            <TextBlock Text="{Binding Count}"/>
+            <TextBlock Text="{Binding Count}" FontSize="32" FontWeight="Bold" Margin="5" />
         </DataTemplate>
 
         <DataTemplate x:Key="MarkerTemplate">

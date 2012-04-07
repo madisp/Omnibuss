@@ -29,9 +29,9 @@
                                         <Grid.Background>
                                             <SolidColorBrush Color="{StaticResource PhoneAccentColor}" />
                                         </Grid.Background>
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Number}" Width="35" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Route_short_name}" Width="35" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
                                     </Grid>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Route_long_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

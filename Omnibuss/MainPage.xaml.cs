@@ -21,7 +21,6 @@ namespace Omnibuss
     {
         GeoCoordinateWatcher watcher;
 
-        MapLayer pinLayer = new MapLayer();
         List<Pushpin> pins;
 
         // Constructor
@@ -60,15 +59,12 @@ namespace Omnibuss
 
                 map1.Center = new GeoCoordinate(58.383333, 26.716667);
                 map1.ZoomLevel = 15;
-                map1.Children.Add(pinLayer);
                 var clusterer = new PushpinClusterer(map1, pins, this.Resources["ClusterTemplate"] as DataTemplate);
 
                 // get list of stops
                 OmnibussModel model = new OmnibussModel();
                 List<Stop> stops = model.GetStops();
                 Debug.WriteLine("Stops count: " + stops.Count);
-
-                map1.MouseLeftButtonUp += new MouseButtonEventHandler(Map_MouseLeftButtonUp);
 
                 foreach (Stop stop in stops)
                 {
@@ -81,18 +77,6 @@ namespace Omnibuss
                             NavigationService.Navigate(new Uri("/StopDetailsPanoramaPage.xaml?stopId=" + id, UriKind.Relative));
                         });
                 }
-            }
-        }
-
-        private void Map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            var fe = e.OriginalSource as FrameworkElement;
-
-            if (fe.DataContext is IEnumerable<object>)
-            {
-                Point point = e.GetPosition(map1);
-                map1.Center = map1.ViewportPointToLocation(point);
-                map1.ZoomLevel = map1.ZoomLevel + 1;
             }
         }
 
