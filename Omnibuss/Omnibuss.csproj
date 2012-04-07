@@ -74,6 +74,8 @@
     </Compile>
     <Compile Include="OmnibussData.cs" />
     <Compile Include="OmnibussModel.cs" />
+    <Compile Include="PushpinClusterer.cs" />
+    <Compile Include="PushpinContainer.cs" />
     <Compile Include="Route.cs" />
     <Compile Include="Service References\RouteService\Reference.cs">
       <AutoGen>True</AutoGen>
