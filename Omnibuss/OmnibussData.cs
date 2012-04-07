@@ -177,13 +177,13 @@ namespace Omnibuss
         partial void DeleteStop(Stop instance);
         #endregion
 
-        public System.Data.Linq.Table<Stop> Stops
-        {
-            get
-            {
-                return this.GetTable<Stop>();
-            }
-        }
+        public System.Data.Linq.Table<Stop> Stops;
+        //{
+        //    get
+        //    {
+        //        return this.GetTable<Stop>();
+        //    }
+        //}
     }
 
     [Index(Name = "UQ__stops__0000000000000012", Columns = "Id ASC", IsUnique = true)]
