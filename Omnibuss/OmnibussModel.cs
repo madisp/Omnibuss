@@ -38,6 +38,8 @@ namespace Omnibuss
                 from route in db.Routes
                     join trip in db.Trips on route.Route_id equals trip.Route_id
                     join stop_time in db.Stop_times on trip.Trip_id equals stop_time.Trip_id
+                where
+                    stop_time.Stop_id == stop.Id
                 orderby route.Route_short_name ascending
                 select route).Distinct().OrderBy(route => route.Route_short_name).ToList();
         }
