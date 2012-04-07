@@ -2,7 +2,7 @@
 
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
   <App xmlns="" ProductID="{ae37445c-f48f-4844-bb64-8f715d69534e}" Title="Omnibuss" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal"  Author="Paugutajad" Description="Super easy bus app" Publisher="Omnibuss">
-    <IconPath IsRelative="true" IsResource="false">mylocation.png</IconPath>
+    <IconPath IsRelative="true" IsResource="false">Bus.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_GAMERSERVICES"/>
       <Capability Name="ID_CAP_IDENTITY_DEVICE"/>

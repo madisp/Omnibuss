@@ -109,6 +109,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="mylocation.png" />
+    <Resource Include="Bus.png" />
     <Content Include="Omnibuss.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
