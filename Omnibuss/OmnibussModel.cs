@@ -15,7 +15,7 @@ namespace Omnibuss
 {
     public class OmnibussModel
     {
-        public List<Stop> getStops()
+        public List<Stop> GetStops()
         {
             List<Stop> ret = new List<Stop>();
             using (OmnibussDataContext db = new OmnibussDataContext(OmnibussDataContext.ConnectionStringReadOnly))
@@ -28,6 +28,18 @@ namespace Omnibuss
                 }
             }
             return ret;
+        }
+
+        public Stop GetStop(UInt32 id)
+        {
+            foreach (Stop stop in GetStops())
+            {
+                if (stop.Id == id)
+                {
+                    return stop;
+                }
+            }
+            return null;
         }
     }
 }
