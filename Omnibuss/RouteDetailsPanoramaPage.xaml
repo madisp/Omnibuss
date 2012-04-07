@@ -46,7 +46,7 @@
             <!--Panorama item two-->
             <controls:PanoramaItem Header="Route">
                 <Grid>
-                    <my:Map Height="601" ZoomLevel="15" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="456" />
+                    <my:Map Height="601" ZoomLevel="15" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="456" AnimationLevel="None" />
                 </Grid>
             </controls:PanoramaItem>
         </controls:Panorama>
