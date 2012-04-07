@@ -78,7 +78,7 @@ namespace Omnibuss
                     pin.MouseLeftButtonUp += new MouseButtonEventHandler(
                         (object sender, MouseButtonEventArgs e) =>
                         {
-                            NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=" + id, UriKind.Relative));
+                            NavigationService.Navigate(new Uri("/StopDetailsPanoramaPage.xaml?stopId=" + id, UriKind.Relative));
                         });
                 }
             }
