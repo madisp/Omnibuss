@@ -14,7 +14,6 @@ using System.Device.Location;
 using Microsoft.Phone.Controls.Maps;
 using System.Diagnostics; //---for Debug.WriteLine()---
 using System.Xml.Linq;
-using Microsoft.Phone.Controls.Maps;
 
 namespace Omnibuss
 {
@@ -67,10 +66,14 @@ namespace Omnibuss
                 foreach (Stop stop in stops)
                 {
                     Pushpin pin = addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
-                    pin.MouseLeftButtonUp += new MouseButtonEventHandler(delegate(object sender, MouseButtonEventArgs e)
-                    {
-                        NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=" + stop.Id, UriKind.Relative));
-                    });
+
+                    int id = stop.Id;
+
+                    pin.MouseLeftButtonUp += new MouseButtonEventHandler(
+                        (object sender, MouseButtonEventArgs e) =>
+                        {
+                            NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=" + id, UriKind.Relative));
+                        });
                 }
             }
         }
@@ -87,7 +90,7 @@ namespace Omnibuss
             // simply returns.
             if (e.Error != null)
             {
-                   return;
+                return;
             }
             else
             {
@@ -99,10 +102,10 @@ namespace Omnibuss
                 }
                 catch (System.Xml.XmlException ex)
                 {
-                    
-                
+
+
                 }
-            }                   
+            }
         }
 
         void watcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
@@ -142,7 +145,7 @@ namespace Omnibuss
         Pushpin addLocationPin(double? latitude, double? longitude, object content)
         {
             Pushpin pin = new Pushpin();
-            pin.Location = new GeoCoordinate((double) latitude, (double) longitude);
+            pin.Location = new GeoCoordinate((double)latitude, (double)longitude);
             pin.Content = content;
             map1.Children.Add(pin);
             return pin;
