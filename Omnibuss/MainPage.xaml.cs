@@ -33,15 +33,6 @@ namespace Omnibuss
 
             InitializeComponent();
 
-            // get list of stops
-            OmnibussModel model = new OmnibussModel();
-            List<Stop> stops = model.getStops();
-
-            foreach (Stop stop in stops)
-            {
-                Debug.WriteLine(stop.Name);
-            }
-
             // Create the WebClient and associate a handler with the OpenReadCompleted event.
             wc = new WebClient();
             wc.OpenReadCompleted += new OpenReadCompletedEventHandler(wc_OpenReadCompleted);
@@ -68,10 +59,19 @@ namespace Omnibuss
                 map1.Center = new GeoCoordinate(47.676289396624654, -122.12096571922302);
                 map1.ZoomLevel = 1;
 
-                Pushpin pin = addLocationPin(47.676289396624654, -122.12096571922302, "San Francsico");
-                pin.MouseLeftButtonUp += new MouseButtonEventHandler(delegate(object sender, MouseButtonEventArgs e) {
-                    NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=12", UriKind.Relative));
-                });
+                // get list of stops
+                OmnibussModel model = new OmnibussModel();
+                List<Stop> stops = model.getStops();
+                Debug.WriteLine("Stops count: " + stops.Count);
+
+                foreach (Stop stop in stops)
+                {
+                    Pushpin pin = addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
+                    pin.MouseLeftButtonUp += new MouseButtonEventHandler(delegate(object sender, MouseButtonEventArgs e)
+                    {
+                        NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=" + stop.Id, UriKind.Relative));
+                    });
+                }
             }
         }
 
@@ -139,10 +139,10 @@ namespace Omnibuss
             pin.Content = "Juuuuhuuuu!";
         }
 
-        Pushpin addLocationPin(double latitude, double longitude, object content)
+        Pushpin addLocationPin(double? latitude, double? longitude, object content)
         {
             Pushpin pin = new Pushpin();
-            pin.Location = new GeoCoordinate(latitude, longitude);
+            pin.Location = new GeoCoordinate((double) latitude, (double) longitude);
             pin.Content = content;
             map1.Children.Add(pin);
             return pin;
