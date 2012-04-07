@@ -10,36 +10,26 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.Data.Linq;
+using System.Linq;
 
 namespace Omnibuss
 {
     public class OmnibussModel
     {
+        private OmnibussDataContext db;
+
+        public OmnibussModel() {
+            db = new OmnibussDataContext(OmnibussDataContext.ConnectionStringReadOnly);
+        }
+
         public List<Stop> GetStops()
         {
-            List<Stop> ret = new List<Stop>();
-            using (OmnibussDataContext db = new OmnibussDataContext(OmnibussDataContext.ConnectionStringReadOnly))
-            {
-                var stops = db.Stops;
-                IEnumerator<Stop> enumer = stops.GetEnumerator();
-                while (enumer.MoveNext())
-                {
-                    ret.Add(enumer.Current);
-                }
-            }
-            return ret;
+            return (from Stop stop in db.Stops select stop).ToList<Stop>();
         }
 
         public Stop GetStop(UInt32 id)
         {
-            foreach (Stop stop in GetStops())
-            {
-                if (stop.Id == id)
-                {
-                    return stop;
-                }
-            }
-            return null;
+            return (from Stop stop in db.Stops where stop.Id.Equals(id) select stop).Single<Stop>();
         }
     }
 }
