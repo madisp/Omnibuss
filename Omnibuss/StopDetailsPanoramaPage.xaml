@@ -21,12 +21,16 @@
             <controls:PanoramaItem Name="FirstItem" Header="Routes">
                 <!--ContentPanel - place additional content here-->
                 <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-                    <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" Name="routeList" VerticalAlignment="Top" Width="460">
+                    <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" Name="routeList" VerticalAlignment="Top" Width="460" SelectionChanged="routeList_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Height="70" Width="70" Source="BusRoute.png" />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Number}" Width="35" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                    <Grid Margin="3" Width="70" Height="70">
+                                        <Grid.Background>
+                                            <SolidColorBrush Color="{StaticResource PhoneAccentColor}" />
+                                        </Grid.Background>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Number}" Width="35" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                    </Grid>
                                     <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -37,7 +41,7 @@
 
             <!--Panorama item two-->
             <controls:PanoramaItem Header="Location">
-                <my:Map Height="601" ZoomLevel="15" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="456" />
+                <my:Map Height="601" ZoomLevel="15" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="456" Margin="6,6,6,6" />
             </controls:PanoramaItem>
         </controls:Panorama>
     </Grid>

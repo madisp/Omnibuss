@@ -18,7 +18,7 @@
         <controls:Panorama Name="Panorama" Title="my application">
 
             <!--Panorama item one-->
-            <controls:PanoramaItem Header="Times">
+            <controls:PanoramaItem Header="Schedule">
                 <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
                     <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" Name="routeList" VerticalAlignment="Top" Width="460">
                         <ListBox.ItemTemplate>
