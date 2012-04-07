@@ -32,6 +32,15 @@ namespace Omnibuss
 
             InitializeComponent();
 
+            // get list of stops
+            OmnibussModel model = new OmnibussModel();
+            List<Stop> stops = model.getStops();
+
+            foreach (Stop stop in stops)
+            {
+                Debug.WriteLine(stop.Name);
+            }
+
             // Create the WebClient and associate a handler with the OpenReadCompleted event.
             wc = new WebClient();
             wc.OpenReadCompleted += new OpenReadCompletedEventHandler(wc_OpenReadCompleted);

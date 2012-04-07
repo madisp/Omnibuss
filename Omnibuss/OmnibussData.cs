@@ -188,7 +188,6 @@ namespace Omnibuss
 
     [Index(Name = "UQ__stops__0000000000000012", Columns = "Id ASC", IsUnique = true)]
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "stops")]
-    [Table]
     public partial class Stop : INotifyPropertyChanging, INotifyPropertyChanged
     {
 

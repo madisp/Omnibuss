@@ -70,6 +70,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OmnibussData.cs" />
     <Compile Include="OmnibussModel.cs" />
     <Compile Include="StopDetails.xaml.cs">
       <DependentUpon>StopDetails.xaml</DependentUpon>
