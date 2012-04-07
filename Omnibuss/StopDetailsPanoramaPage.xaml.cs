@@ -43,7 +43,7 @@ namespace Omnibuss
             Stop stop = model.GetStop(stopId);
             Panorama.Title = stop.Name;
 
-            routeList.ItemsSource = model.GetRoutesByStop(stop);
+            routeList.ItemsSource = routes = model.GetRoutesByStop(stop);
 
             addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
             map1.Center = new GeoCoordinate((double)stop.Latitude, (double)stop.Longitude);
