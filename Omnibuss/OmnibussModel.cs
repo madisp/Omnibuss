@@ -35,7 +35,10 @@ namespace Omnibuss
         public List<Route> GetRoutesByStop(Stop stop)
         {
             return (
-                from Route route in db.Routes select route).ToList<Route>();
+                from route in db.Routes
+                    join trip in db.Trips on route.Route_id equals trip.Route_id
+                    join stop_time in db.Stop_times on trip.Trip_id equals stop_time.Trip_id
+                select route).ToList();
         }
     }
 }
