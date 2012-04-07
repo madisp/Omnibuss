@@ -14,6 +14,7 @@ using System.Device.Location;
 using Microsoft.Phone.Controls.Maps;
 using System.Diagnostics; //---for Debug.WriteLine()---
 using System.Xml.Linq;
+using Microsoft.Phone.Controls.Maps;
 
 namespace Omnibuss
 {
@@ -57,8 +58,8 @@ namespace Omnibuss
                 map1.Center = new GeoCoordinate(47.676289396624654, -122.12096571922302);
                 map1.ZoomLevel = 1;
 
-                Pushpin pin = addLocationPin(47.676289396624654, -122.12096571922302, new Uri("http://www.clker.com/cliparts/e/d/9/9/1206572112160208723johnny_automatic_NPS_map_pictographs_part_67.svg.med.png"));
-                pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
+                Pushpin pin = addLocationPin(47.676289396624654, -122.12096571922302, "San Francsico");
+                pin.MouseLeftButtonUp += new MouseButtonEventHandler(stopLocation_Click);
             }
         }
 
@@ -115,7 +116,7 @@ namespace Omnibuss
         {
             Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
             map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
-            Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, new Uri("mylocation.png", UriKind.Relative));
+            Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
             pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
         }
 
@@ -126,21 +127,20 @@ namespace Omnibuss
             pin.Content = "Juuuuhuuuu!";
         }
 
-        Pushpin addLocationPin(double latitude, double longitude, Uri uri)
+        void stopLocation_Click(object sender, MouseButtonEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=", UriKind.Relative));
+        }
+
+        Pushpin addLocationPin(double latitude, double longitude, object content)
         {
             Pushpin pin = new Pushpin();
 
             //---set the location for the pushpin---
             pin.Location = new GeoCoordinate(latitude, longitude);
 
-            //---use an ImageBrushobject and fill it with an image from the web---
-            ImageBrush image = new ImageBrush()
-            {
-                ImageSource = new System.Windows.Media.Imaging.BitmapImage(uri)
-            };
-
             //---draw an ellipse inside the pushpin and fill it with the image---
-            pin.Content = "tere";
+            pin.Content = content;
 
             //---add the pushpin to the map---
             map1.Children.Add(pin);
