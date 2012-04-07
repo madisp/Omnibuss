@@ -10,13 +10,15 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
+using System.Device.Location;
+using Microsoft.Phone.Controls.Maps;
 using System.Diagnostics; //---for Debug.WriteLine()---
 
 namespace Omnibuss
 {
-    public partial class StopDetailsPage : PhoneApplicationPage
+    public partial class StopDetailsPanoramaPage : PhoneApplicationPage
     {
-        public StopDetailsPage()
+        public StopDetailsPanoramaPage()
         {
             InitializeComponent();
         }
@@ -36,9 +38,21 @@ namespace Omnibuss
 
             OmnibussModel model = new OmnibussModel();
             Stop stop = model.GetStop(stopId);
-            PageTitle.Text = stop.Name;
+            Panorama.Title = stop.Name;
 
             routeList.ItemsSource = model.GetRoutes();
+
+            addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
+            map1.Center = new GeoCoordinate((double)stop.Latitude, (double)stop.Longitude);
+        }
+
+        Pushpin addLocationPin(double? latitude, double? longitude, object content)
+        {
+            Pushpin pin = new Pushpin();
+            pin.Location = new GeoCoordinate((double)latitude, (double)longitude);
+            pin.Content = content;
+            map1.Children.Add(pin);
+            return pin;
         }
     }
 }
