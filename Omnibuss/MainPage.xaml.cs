@@ -73,10 +73,16 @@ namespace Omnibuss
         {
             Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
             map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
-            addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, new Uri("mylocation.png", UriKind.Relative));
+            Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, new Uri("mylocation.png", UriKind.Relative));
+            pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
         }
 
-        void addLocationPin(double latitude, double longitude, Uri uri)
+        void myLocation_Click(object sender, MouseButtonEventArgs e)
+        {
+            Debug.WriteLine("Siin ma olengi :)");
+        }
+
+        Pushpin addLocationPin(double latitude, double longitude, Uri uri)
         {
             Pushpin pin = new Pushpin();
 
@@ -100,6 +106,7 @@ namespace Omnibuss
 
             //---add the pushpin to the map---
             map1.Children.Add(pin);
+            return pin;
         }
     }
 }
