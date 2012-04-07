@@ -12,11 +12,13 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using Microsoft.Phone.Controls.Maps.Platform;
 
+
 namespace Omnibuss
 {
     public partial class MainPage : PhoneApplicationPage
     {
         GeoCoordinateWatcher watcher;
+        StopDTO lastStop;
 
         WebClient wc;
 
@@ -53,8 +55,19 @@ namespace Omnibuss
                 map1.Center = new GeoCoordinate(58.383943, 26.717124);
                 map1.ZoomLevel = 15;
 
-                Pushpin pin = addLocationPin(47.676289396624654, -122.12096571922302, new Uri("http://www.clker.com/cliparts/e/d/9/9/1206572112160208723johnny_automatic_NPS_map_pictographs_part_67.svg.med.png"));
-                pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
+                // get list of stops
+                OmnibussModel model = new OmnibussModel();
+                List<Stop> stops = model.getStops();
+                Debug.WriteLine("Stops count: " + stops.Count);
+
+                foreach (Stop stop in stops)
+                {
+                    Pushpin pin = addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
+                    pin.MouseLeftButtonUp += new MouseButtonEventHandler(delegate(object sender, MouseButtonEventArgs e)
+                    {
+                        NavigationService.Navigate(new Uri("/StopDetails.xaml?stopId=" + stop.Id, UriKind.Relative));
+                    });
+                }
             }
         }
 
@@ -149,8 +162,9 @@ namespace Omnibuss
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
-            // map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
-            Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, new Uri("mylocation.png", UriKind.Relative));
+
+            map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
+            Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
             pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
         }
 
@@ -161,23 +175,11 @@ namespace Omnibuss
             pin.Content = "Juuuuhuuuu!";
         }
 
-        Pushpin addLocationPin(double latitude, double longitude, Uri uri)
+        Pushpin addLocationPin(double? latitude, double? longitude, object content)
         {
             Pushpin pin = new Pushpin();
-
-            //---set the location for the pushpin---
-            pin.Location = new GeoCoordinate(latitude, longitude);
-
-            //---use an ImageBrushobject and fill it with an image from the web---
-            ImageBrush image = new ImageBrush()
-            {
-                ImageSource = new System.Windows.Media.Imaging.BitmapImage(uri)
-            };
-
-            //---draw an ellipse inside the pushpin and fill it with the image---
-            pin.Content = "tere";
-
-            //---add the pushpin to the map---
+            pin.Location = new GeoCoordinate((double) latitude, (double) longitude);
+            pin.Content = content;
             map1.Children.Add(pin);
             return pin;
         }
