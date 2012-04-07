@@ -70,7 +70,7 @@ namespace Omnibuss
 
             Route route = routes.ElementAt(index);
 
-            NavigationService.Navigate(new Uri("/RouteDetailsPanoramaPage.xaml?stopId=" + stopId + "&routeId=" + route.Id, UriKind.Relative));
+            NavigationService.Navigate(new Uri("/RouteDetailsPanoramaPage.xaml?stopId=" + stopId + "&routeId=" + route.Route_id, UriKind.Relative));
         }
     }
 }
