@@ -13,6 +13,7 @@ using Microsoft.Phone.Controls;
 using System.Device.Location;
 using Microsoft.Phone.Controls.Maps;
 using System.Diagnostics; //---for Debug.WriteLine()---
+using System.Xml.Linq;
 
 namespace Omnibuss
 {
@@ -20,10 +21,20 @@ namespace Omnibuss
     {
         GeoCoordinateWatcher watcher;
 
+        String requestString = "http://dev.virtualearth.net/REST/V1/Routes/Driving?o=json&wp.0=lynnwood&wp.1=seattle&avoid=minimizeTolls&key=Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr";
+        WebClient wc;
+
         // Constructor
         public MainPage()
         {
+
+
             InitializeComponent();
+
+            // Create the WebClient and associate a handler with the OpenReadCompleted event.
+            wc = new WebClient();
+            wc.OpenReadCompleted += new OpenReadCompletedEventHandler(wc_OpenReadCompleted);
+            CallToWebService();
 
             if (watcher == null)
             {
@@ -77,22 +88,52 @@ namespace Omnibuss
             }
         }
 
+        private void CallToWebService()
+        {
+            // Call the OpenReadAsyc to make a get request, passing the url with the selected search string.
+            wc.OpenReadAsync(new Uri(requestString));
+        }
+        void wc_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+        {
+            XElement resultXml;
+            // You should always check to see if an error occurred. In this case, the application
+            // simply returns.
+            if (e.Error != null)
+            {
+                   return;
+            }
+            else
+            {
+                XNamespace web = "http://schemas.microsoft.com/LiveSearch/2008/04/XML/web";
+                try
+                {
+                    resultXml = XElement.Load(e.Result);
+                    Debug.WriteLine("Heihoo: " + resultXml.FirstNode.ToString());
+                }
+                catch (System.Xml.XmlException ex)
+                {
+                    
+                
+                }
+            }                   
+        }
+
         void watcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
         {
             switch (e.Status)
             {
                 case GeoPositionStatus.Disabled:
-                Debug.WriteLine("disabled");
-                break;
+                    Debug.WriteLine("disabled");
+                    break;
                 case GeoPositionStatus.Initializing:
-                Debug.WriteLine("initializing");
-                break;
+                    Debug.WriteLine("initializing");
+                    break;
                 case GeoPositionStatus.NoData:
-                Debug.WriteLine("nodata");
-                break;
+                    Debug.WriteLine("nodata");
+                    break;
                 case GeoPositionStatus.Ready:
-                Debug.WriteLine("ready");
-                break;
+                    Debug.WriteLine("ready");
+                    break;
             }
         }
 
