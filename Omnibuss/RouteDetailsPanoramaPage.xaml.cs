@@ -44,9 +44,23 @@ namespace Omnibuss
 
             UInt32 routeId = UInt32.Parse(idString);
             Debug.WriteLine("Route id: " + routeId);
+            Route route = new Route(1, "3A", "Möku - Nott");
+            Panorama.Title = route;
 
             OmnibussModel model = new OmnibussModel();
             Stop stop = model.GetStop(stopId);
+
+            List<String> timesList = new List<String>();
+            timesList.Add("12:00");
+            timesList.Add("12:25");
+            timesList.Add("12:50");
+            timesList.Add("13:15");
+            timesList.Add("13:40");
+            timesList.Add("14:05");
+            timesList.Add("14:30");
+            timesList.Add("14:55");
+            timesList.Add("15:20");
+            schedule.ItemsSource = timesList;
         }
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
