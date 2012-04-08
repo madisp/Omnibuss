@@ -154,14 +154,15 @@ namespace Omnibuss
                     else if (myLocation != null)
                     {
                         DateTime now = DateTime.Now;
-                        int diff = (int)times[0].Departure_time - (now.Hour * 10000 + now.Minute * 100 + now.Second);
+                        int dep = (int)times[0].Departure_time;
+                        int cur = (now.Hour * 10000 + now.Minute * 100 + now.Second);
 
                         double _diff = 0.0;
-                        _diff += diff % 100;
-                        diff /= 100;
-                        _diff += (diff % 100) * 60;
-                        diff /= 100;
-                        _diff += (diff % 100) * 60;
+                        _diff += (dep % 100) - (cur % 100);
+                        dep /= 100; cur /= 100;
+                        _diff += ((dep % 100) - (cur % 100)) * 60;
+                        dep /= 100; cur /= 100;
+                        _diff += ((dep % 100) - (cur % 100)) * 3600;
 
                         double timeInHours = _diff / 3600.0;
                         // TEMP END
