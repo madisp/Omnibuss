@@ -55,17 +55,28 @@ namespace Omnibuss
             return (from trip in db.Trips where trip.Route_id.Equals(route.Route_id) select trip).ToList();
         }
 
-        public Trip GetMaxTripByRoute(Route route)
+        public Trip GetMaxTripByRoute(Route route, int direction)
         {
             var trips =
                 from trip in db.Trips
-                join stop_time in db.Stop_times on trip.Trip_id equals stop_time.Trip_id into j1
-                from j2 in j1.DefaultIfEmpty()
-                group j2 by trip.Trip_id into grouped
-                orderby grouped.Count() descending
-                select new { ParentId = grouped.Key, Count = grouped.Count() };
+                let sCount = (
+                    from stop_time in db.Stop_times
+                    where stop_time.Trip_id == trip.Trip_id
+                    select stop_time.Stop_id
+                ).Count()
+                where trip.Route_id == route.Route_id && trip.Direction == direction
+                orderby sCount descending
+                select new { Trip = trip, Count = sCount };
+            return trips.Take(1).Single().Trip;
+            //var trips =
+            //    from trip in db.Trips
+            //    join stop_time in db.Stop_times on trip.Trip_id equals stop_time.Trip_id into j1
+            //    from j2 in j1.DefaultIfEmpty()
+            //    group j2 by trip.Trip_id into grouped
+            //    orderby grouped.Count() descending
+            //    select new { ParentId = grouped.Key, Count = grouped.Count() };
 
-            return (from trip in db.Trips where trip.Trip_id.Equals(trips.Single().ParentId) select trip).Single();
+            //return (from trip in db.Trips where trip.Trip_id.Equals(trips.Single().ParentId) select trip).Single();
         }
 
         public List<Stop> GetStopsByTrip(Trip trip)

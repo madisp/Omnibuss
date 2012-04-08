@@ -13,6 +13,16 @@
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="False" Loaded="PhoneApplicationPage_Loaded" d:DesignHeight="800" d:DesignWidth="480" xmlns:my="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps">
 
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="ClusterTemplate">
+            <TextBlock Text="{Binding Count}" FontSize="32" FontWeight="Bold" Margin="5" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="MarkerTemplate">
+            <TextBlock Text="{Binding}" MaxWidth="100"/>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+
     <!--LayoutRoot contains the root grid where all other page content is placed-->
     <Grid x:Name="LayoutRoot">
         <controls:Panorama Name="Panorama">
@@ -46,7 +56,7 @@
             <!--Panorama item two-->
             <controls:PanoramaItem Header="Marsruut">
                 <Grid>
-                    <my:Map Height="601" ZoomLevel="15" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="456" AnimationLevel="None" />
+                    <my:Map Height="536" ZoomLevel="15" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="456" AnimationLevel="None" />
                 </Grid>
             </controls:PanoramaItem>
         </controls:Panorama>
