@@ -79,23 +79,20 @@ namespace Omnibuss
             }
             Panorama.Title = route;
 
+            var panoramaItem = Panorama.Items[0] as PanoramaItem;
+            if (panoramaItem != null)
+            {
+                panoramaItem.Header = stop.Name;
+            }
+
             List<String> timesList = new List<String>();
-            //timesList.Add("12:00");
-            //timesList.Add("12:25");
-            //timesList.Add("12:50");
-            //timesList.Add("13:15");
-            //timesList.Add("13:40");
-            //timesList.Add("14:05");
-            //timesList.Add("14:30");
-            //timesList.Add("14:55");
-            //timesList.Add("15:20");
             List<Stop_time> times = model.GetTimesByRouteAndStop(route, stop);
             foreach (var time in times) 
             {
                String timeString = time.Departure_time.ToString();
                String hours = timeString.Substring(0, timeString.Length > 5 ? 2 : 1);
                String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
-               timesList.Add(hours + ":" + minutes);
+               timesList.Add(String.Format("{0,2:d2}:{1,2:d2}", hours, minutes));
             }
             schedule.ItemsSource = timesList;
         }
