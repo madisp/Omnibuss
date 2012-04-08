@@ -62,7 +62,7 @@
             <!--Panorama item one-->
             <controls:PanoramaItem Header="Peatused">
                 <Grid x:Name="MapPanel" Grid.Row="1">
-                    <my:Map Height="498" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="436">
+                    <my:Map Height="460" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="436">
                         <my:MapItemsControl x:Name="mapControl" />
                     </my:Map>
                 </Grid>
@@ -82,7 +82,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <TextBlock Name="noTickets" Visibility="Visible" Text="Sul pole ühtegi piletit." FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
-                    <Button Height="81" Margin="0,417,0,0" Click="BuyTicket_Click">
+                    <Button Height="81" Margin="0,350,0,0" Click="BuyTicket_Click">
                         <Button.Content>Osta pilet</Button.Content>
                     </Button>    
                 </Grid>
