@@ -63,15 +63,16 @@
 
             <!--Panorama item one-->
             <controls:PanoramaItem Header="Graafik">
-                <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-                    <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" Name="schedule" VerticalAlignment="Top" Width="460">
+                <StackPanel x:Name="ContentPanel" Orientation="Vertical" Margin="12,0,12,0">
+                    <TextBlock Name="NextTime" FontSize="32" TextWrapping="Wrap"/>
+                    <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" Name="schedule" VerticalAlignment="Top" Width="370" Height="500">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock VerticalAlignment="Center" Text="{Binding}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                </Grid>
+                </StackPanel>
             </controls:PanoramaItem>
 
             <!--Panorama item two-->

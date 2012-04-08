@@ -58,19 +58,24 @@ namespace Omnibuss
         public List<Stop_time> GetTimesByRouteAndStop(Route route, Stop stop)
         {
 
+            DateTime today = DateTime.Now;
+
+            int clamp = today.Hour * 10000 + today.Minute * 100 + today.Second;
+
             /* no dynamic cols, too tired to change the schema. 8AM. -madis */
             var query = (
                 from stop_time in db.Stop_times
                 join trip in db.Trips on stop_time.Trip_id equals trip.Trip_id
                 join service in db.Services on trip.Service_id equals service.Service_id
                 where trip.Route_id == route.Route_id && stop_time.Stop_id == stop.Id
+                    && stop_time.Departure_time > clamp
                 orderby stop_time.Departure_time ascending
                 select new { Time = stop_time, Service = service }
             );
 
             List<Stop_time> timepts = new List<Stop_time>();
 
-            switch (DateTime.Today.DayOfWeek)
+            switch (today.DayOfWeek)
             {
             case DayOfWeek.Monday:
                     var times = query.Where(o => o.Service.Monday == 1);

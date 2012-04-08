@@ -13,6 +13,7 @@ using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
 using System.Diagnostics;
 using Microsoft.Phone.Tasks;
+using Microsoft.Phone.Shell;
 
 
 
@@ -28,6 +29,8 @@ namespace Omnibuss
         public TicketPage()
         {
             InitializeComponent();
+
+            SystemTray.SetIsVisible(this, true);
 
             options.ItemsSource = ticketOptions = TicketOption.getOptions();
 

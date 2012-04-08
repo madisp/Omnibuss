@@ -35,6 +35,8 @@ namespace Omnibuss
         {
             InitializeComponent();
 
+            SystemTray.SetIsVisible(this, true);
+
             pins = new List<Pushpin>();
 
             if (watcher == null)
