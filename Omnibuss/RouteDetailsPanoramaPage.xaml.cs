@@ -24,6 +24,8 @@ namespace Omnibuss
     {
 
         List<Pushpin> pins;
+        GeoCoordinateWatcher watcher;
+        Location myLocation;
 
         public RouteDetailsPanoramaPage()
         {
@@ -33,10 +35,58 @@ namespace Omnibuss
 
             var clusterer = new PushpinClusterer(map1, pins, this.Resources["ClusterTemplate"] as DataTemplate);
 
-            map1.Center = new GeoCoordinate(58.383333, 26.716667);
-            map1.ZoomLevel = 15;
-
             SystemTray.SetIsVisible(this, true);
+
+            if (watcher == null)
+            {
+                //---get the highest accuracy---
+                watcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High)
+                {
+                    //---the minimum distance (in meters) to travel before the next 
+                    // location update---
+                    MovementThreshold = 10
+                };
+
+                //---event to fire when a new position is obtained---
+                watcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(watcher_PositionChanged);
+
+                //---event to fire when there is a status change in the location 
+                // service API---
+                watcher.StatusChanged += new EventHandler<GeoPositionStatusChangedEventArgs>(watcher_StatusChanged);
+                watcher.Start();
+
+                map1.Center = new GeoCoordinate(58.383333, 26.716667);
+                map1.ZoomLevel = 15;
+                map1.Mode = new MyMapMode();
+            }
+        }
+
+        void watcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
+        {
+            switch (e.Status)
+            {
+                case GeoPositionStatus.Disabled:
+                    Debug.WriteLine("disabled");
+                    break;
+                case GeoPositionStatus.Initializing:
+                    Debug.WriteLine("initializing");
+                    break;
+                case GeoPositionStatus.NoData:
+                    Debug.WriteLine("nodata");
+                    break;
+                case GeoPositionStatus.Ready:
+                    Debug.WriteLine("ready");
+                    break;
+            }
+        }
+
+        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        {
+            Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
+            if (!e.Position.Location.IsUnknown)
+            {
+                myLocation = e.Position.Location;
+            }
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -67,7 +117,7 @@ namespace Omnibuss
             Stop stop = model.GetStop(stopId);
             Route route = model.GetRoute(routeId);
 
-            List<Stop_time> times;
+            List<Stop_time> times = new List<Stop_time>();
             List<List<Stop>> stopsList = new List<List<Stop>>();
 
             ProgressIndicator progress = new ProgressIndicator();
@@ -103,9 +153,6 @@ namespace Omnibuss
                     }
                     else
                     {
-                        // TEMP
-                        Location myLocation = new Location();
-
                         DateTime now = DateTime.Now;
                         int diff = (int)times[0].Departure_time - (now.Hour * 10000 + now.Minute * 100 + now.Second);
 
@@ -154,6 +201,13 @@ namespace Omnibuss
                         foreach (var _stop in stops)
                         {
                             Pushpin pin = addLocationPin(_stop.Latitude, _stop.Longitude, _stop.Name);
+                            int id = _stop.Id;
+
+                            pin.MouseLeftButtonUp += new MouseButtonEventHandler(
+                                (sender1, e1) =>
+                                {
+                                    NavigationService.Navigate(new Uri("/StopDetailsPanoramaPage.xaml?stopId=" + id, UriKind.Relative));
+                                });
                         }
                     }
                     progress.IsVisible = false;

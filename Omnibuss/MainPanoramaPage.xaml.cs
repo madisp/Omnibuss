@@ -163,19 +163,18 @@ namespace Omnibuss
 
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            // Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
-
-            // map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
-            // Pushpin pin = addLocationPin(e.Position.Location.Latitude, e.Position.Location.Longitude, "My Location");
-            // pin.MouseLeftButtonUp += new MouseButtonEventHandler(myLocation_Click);
+            Debug.WriteLine("({0},{1})", e.Position.Location.Latitude, e.Position.Location.Longitude);
+            if (!e.Position.Location.IsUnknown)
+            {
+                Pushpin p = new Pushpin();
+                p.Template = this.Resources["pinMyLoc"] as ControlTemplate;
+                p.Location = e.Position.Location;
+                mapControl.Items.Add(p);
+                map1.SetView(e.Position.Location, 17.0);
+                map1.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
+                watcher.Stop();
+            }
         }
-
-        //void myLocation_Click(object sender, MouseButtonEventArgs e)
-        //{
-        //    Debug.WriteLine("Siin ma olengi :)");
-        //    Pushpin pin = (Pushpin)sender;
-        //    pin.Content = "Juuuuhuuuu!";
-       // }
 
         Pushpin addLocationPin(double? latitude, double? longitude, object content)
         {
