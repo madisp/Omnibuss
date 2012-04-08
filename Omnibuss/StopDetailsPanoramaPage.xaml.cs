@@ -12,7 +12,8 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using System.Device.Location;
 using Microsoft.Phone.Controls.Maps;
-using System.Diagnostics; //---for Debug.WriteLine()---
+using System.Diagnostics;
+using Microsoft.Phone.Shell; //---for Debug.WriteLine()---
 
 namespace Omnibuss
 {
@@ -24,6 +25,7 @@ namespace Omnibuss
         public StopDetailsPanoramaPage()
         {
             InitializeComponent();
+            SystemTray.SetIsVisible(this, true);
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)

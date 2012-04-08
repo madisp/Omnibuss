@@ -13,8 +13,10 @@ using Microsoft.Phone.Controls;
 using System.Diagnostics;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Controls.Maps.Platform;
+using Microsoft.Phone.Shell;
 using System.Device.Location;
-using MarkerClustering; //---for Debug.WriteLine()---
+using MarkerClustering;
+using System.ComponentModel; //---for Debug.WriteLine()---
 
 namespace Omnibuss
 {
@@ -33,6 +35,8 @@ namespace Omnibuss
 
             map1.Center = new GeoCoordinate(58.383333, 26.716667);
             map1.ZoomLevel = 15;
+
+            SystemTray.SetIsVisible(this, true);
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -63,20 +67,57 @@ namespace Omnibuss
             Stop stop = model.GetStop(stopId);
             Route route = model.GetRoute(routeId);
 
-            for (int i = 0; i < 2; i++)
-            {
-                Trip trip = model.GetMaxTripByRoute(route, i);
-                if (trip != null)
+            List<String> timesList = new List<String>();
+            List<List<Stop>> stopsList = new List<List<Stop>>();
+
+            ProgressIndicator progress = new ProgressIndicator();
+            progress.IsVisible = true;
+            progress.IsIndeterminate = true;
+            SystemTray.SetProgressIndicator(this, progress);
+
+            BackgroundWorker bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += new DoWorkEventHandler(
+                (sender, args) =>
                 {
-                    Debug.WriteLine("TripID: " + trip.Trip_id);
-                    List<Stop> stops = model.GetStopsByTrip(trip);
-                    GetRoute(stops);
-                    foreach (Stop _stop in stops)
+                    for (int i = 0; i < 2; i++)
                     {
-                        Pushpin pin = addLocationPin(_stop.Latitude, _stop.Longitude, _stop.Name);
+                        Trip trip = model.GetMaxTripByRoute(route, i);
+                        if (trip != null)
+                        {
+                            Debug.WriteLine("TripID: " + trip.Trip_id);
+                            List<Stop> stops = model.GetStopsByTrip(trip);
+                            stopsList.Add(stops);
+                        }
+                    }
+
+                    List<Stop_time> times = model.GetTimesByRouteAndStop(route, stop);
+                    foreach (var time in times)
+                    {
+                        String timeString = time.Departure_time.ToString();
+                        String hours = timeString.Substring(0, timeString.Length > 5 ? 2 : 1);
+                        String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
+                        timesList.Add(String.Format("{0,2:d2}:{1,2:d2}", hours, minutes));
                     }
                 }
-            }
+            );
+            bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+                (sender, args) =>
+                {
+                    schedule.ItemsSource = timesList;
+                    foreach (var stops in stopsList)
+                    {
+                        GetRoute(stops);
+                        foreach (var _stop in stops)
+                        {
+                            Pushpin pin = addLocationPin(_stop.Latitude, _stop.Longitude, _stop.Name);
+                        }
+                    }
+                    progress.IsVisible = false;
+                }
+            );
+            bgWorker.RunWorkerAsync();
+
+            
             Panorama.Title = route;
 
             var panoramaItem = Panorama.Items[0] as PanoramaItem;
@@ -84,17 +125,6 @@ namespace Omnibuss
             {
                 panoramaItem.Header = stop.Name;
             }
-
-            List<String> timesList = new List<String>();
-            List<Stop_time> times = model.GetTimesByRouteAndStop(route, stop);
-            foreach (var time in times) 
-            {
-               String timeString = time.Departure_time.ToString();
-               String hours = timeString.Substring(0, timeString.Length > 5 ? 2 : 1);
-               String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
-               timesList.Add(String.Format("{0,2:d2}:{1,2:d2}", hours, minutes));
-            }
-            schedule.ItemsSource = timesList;
         }
 
         Pushpin addLocationPin(double? latitude, double? longitude, object content)

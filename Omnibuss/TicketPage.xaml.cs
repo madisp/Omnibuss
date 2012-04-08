@@ -29,6 +29,8 @@ namespace Omnibuss
         {
             InitializeComponent();
 
+            SystemTray.SetIsVisible(this, true);
+
             options.ItemsSource = ticketOptions = TicketOption.getOptions();
 
             try
