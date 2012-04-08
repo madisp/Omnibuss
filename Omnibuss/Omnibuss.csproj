@@ -92,6 +92,7 @@
       <DependentUpon>StopDetailsPanoramaPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Ticket.cs" />
+    <Compile Include="TicketOption.cs" />
     <Compile Include="TicketPage.xaml.cs">
       <DependentUpon>TicketPage.xaml</DependentUpon>
     </Compile>

@@ -18,6 +18,7 @@ namespace Omnibuss
         public TicketPage()
         {
             InitializeComponent();
+            options.ItemsSource = TicketOption.getOptions();
         }
     }
 }
