@@ -67,6 +67,15 @@ namespace Omnibuss
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
+            if (idInput.Text.Length < 1)
+            {
+                return;
+            }
+            if (docNrInput.Text.Length < 1)
+            {
+                return;
+            }
+
             appSettings.Add("isikukood", idInput.Text);
             appSettings.Add("dokNr", docNrInput.Text);
             appSettings.Save();
