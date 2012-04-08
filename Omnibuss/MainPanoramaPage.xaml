@@ -69,7 +69,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <TextBlock Name="noTickets" Visibility="Visible" Text="Sul pole ühtegi piletit." />
+                    <TextBlock Name="noTickets" Visibility="Visible" Text="Sul pole ühtegi piletit." FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
                     <Button Height="81" Margin="0,417,0,0" Click="BuyTicket_Click">
                         <Button.Content>Osta pilet</Button.Content>
                     </Button>    

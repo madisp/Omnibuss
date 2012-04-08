@@ -77,8 +77,11 @@ namespace Omnibuss
                         });
                 }
             }
+        }
 
-            
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
             LoadTickets();
         }
 
@@ -88,16 +91,19 @@ namespace Omnibuss
 
             String idCode;
             String documentCode = "";
-            if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue<String>("idCode", out idCode))
+            if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue<String>("isikukood", out idCode))
             {
                 Debug.WriteLine("No id code present, skipping tickets");
                 return;
             }
-            if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue<String>("documentCode", out documentCode))
+            Debug.WriteLine("idCode: " + idCode);
+
+            if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue<String>("dokNr", out documentCode))
             {
                 Debug.WriteLine("No document code present, skipping tickets");
                 return;
             }
+            Debug.WriteLine("documentCode: " + documentCode);
 
             var w = new WebClient();
             try
