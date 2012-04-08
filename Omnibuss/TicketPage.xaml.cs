@@ -37,11 +37,26 @@ namespace Omnibuss
             if (isikukood == null || dokNumber == null || isikukood.Length == 0 || dokNumber.Length == 0)
             {
                 Debug.WriteLine("Show inputs: " + isikukood + ", " + dokNumber);
-                DataPanel.Visibility = System.Windows.Visibility.Visible;
+                
+                //DataPanel.Visibility = System.Windows.Visibility.Visible;
                 return;
             }
             // TODO present the ticket options here
+
+           
+            this.Loaded += new RoutedEventHandler(TicketPage_Loaded);
         }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            Ilmumine.Begin();
+        }
+
+        void TicketPage_Loaded(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
@@ -50,7 +65,7 @@ namespace Omnibuss
             isikukood = (string)appSettings["isikukood"];
             dokNumber = (string)appSettings["dokNr"];
             Debug.WriteLine("Hei:" + isikukood + " / " + dokNumber + "!");
-            DataPanel.Visibility = System.Windows.Visibility.Collapsed;
+            //DataPanel.Visibility = System.Windows.Visibility.Collapsed;
         }
     }
 }
