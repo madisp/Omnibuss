@@ -55,6 +55,75 @@ namespace Omnibuss
             return (from trip in db.Trips where trip.Route_id.Equals(route.Route_id) select trip).ToList();
         }
 
+        public List<Stop_time> GetTimesByRouteAndStop(Route route, Stop stop)
+        {
+
+            /* no dynamic cols, too tired to change the schema. 8AM. -madis */
+            var query = (
+                from stop_time in db.Stop_times
+                join trip in db.Trips on stop_time.Trip_id equals trip.Trip_id
+                join service in db.Services on trip.Service_id equals service.Service_id
+                where trip.Route_id == route.Route_id && stop_time.Stop_id == stop.Id
+                orderby stop_time.Departure_time ascending
+                select new { Time = stop_time, Service = service }
+            );
+
+            List<Stop_time> timepts = new List<Stop_time>();
+
+            switch (DateTime.Today.DayOfWeek)
+            {
+            case DayOfWeek.Monday:
+                    var times = query.Where(o => o.Service.Monday == 1);
+                    foreach (var v in times.ToList()) {
+                        timepts.Add(v.Time);
+                    }
+                    break;
+            case DayOfWeek.Tuesday:
+                    times = query.Where(o => o.Service.Tuesday == 1);
+                    foreach (var v in times.ToList())
+                    {
+                        timepts.Add(v.Time);
+                    }
+                    break;
+            case DayOfWeek.Wednesday:
+                    times = query.Where(o => o.Service.Wednesday == 1);
+                    foreach (var v in times.ToList())
+                    {
+                        timepts.Add(v.Time);
+                    }
+                    break;
+            case DayOfWeek.Thursday:
+                    times = query.Where(o => o.Service.Thursday == 1);
+                    foreach (var v in times.ToList())
+                    {
+                        timepts.Add(v.Time);
+                    }
+                    break;
+            case DayOfWeek.Friday:
+                    times = query.Where(o => o.Service.Friday == 1);
+                    foreach (var v in times.ToList())
+                    {
+                        timepts.Add(v.Time);
+                    }
+                    break;
+            case DayOfWeek.Saturday:
+                    times = query.Where(o => o.Service.Saturday == 1);
+                    foreach (var v in times.ToList())
+                    {
+                        timepts.Add(v.Time);
+                    }
+                    break;
+            case DayOfWeek.Sunday:
+                    times = query.Where(o => o.Service.Sunday == 1);
+                    foreach (var v in times.ToList())
+                    {
+                        timepts.Add(v.Time);
+                    }
+                    break;
+            }
+            return timepts;
+        }
+
         public Trip GetMaxTripByRoute(Route route, int direction)
         {
             var trips =
@@ -67,7 +136,7 @@ namespace Omnibuss
                 where trip.Route_id == route.Route_id && trip.Direction == direction
                 orderby sCount descending
                 select new { Trip = trip, Count = sCount };
-            return trips.Take(1).Single().Trip;
+            return trips.Take(1).SingleOrDefault().Trip;
             //var trips =
             //    from trip in db.Trips
             //    join stop_time in db.Stop_times on trip.Trip_id equals stop_time.Trip_id into j1

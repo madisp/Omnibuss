@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using System.Diagnostics;
 
 namespace Omnibuss
 {
@@ -98,6 +99,7 @@ namespace Omnibuss
         {
             if (System.Diagnostics.Debugger.IsAttached)
             {
+                Debug.WriteLine(e.ExceptionObject.StackTrace);
                 // An unhandled exception has occurred; break into the debugger
                 System.Diagnostics.Debugger.Break();
             }
