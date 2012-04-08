@@ -66,12 +66,15 @@ namespace Omnibuss
             for (int i = 0; i < 2; i++)
             {
                 Trip trip = model.GetMaxTripByRoute(route, i);
-                Debug.WriteLine("TripID: " + trip.Trip_id);
-                List<Stop> stops = model.GetStopsByTrip(trip);
-                GetRoute(stops);
-                foreach (Stop _stop in stops)
+                if (trip != null)
                 {
-                    Pushpin pin = addLocationPin(_stop.Latitude, _stop.Longitude, _stop.Name);
+                    Debug.WriteLine("TripID: " + trip.Trip_id);
+                    List<Stop> stops = model.GetStopsByTrip(trip);
+                    GetRoute(stops);
+                    foreach (Stop _stop in stops)
+                    {
+                        Pushpin pin = addLocationPin(_stop.Latitude, _stop.Longitude, _stop.Name);
+                    }
                 }
             }
             Panorama.Title = route;
@@ -87,8 +90,12 @@ namespace Omnibuss
             //timesList.Add("14:55");
             //timesList.Add("15:20");
             List<Stop_time> times = model.GetTimesByRouteAndStop(route, stop);
-            foreach (var time in times) {
-               timesList.Add(time.Departure_time.ToString());
+            foreach (var time in times) 
+            {
+               String timeString = time.Departure_time.ToString();
+               String hours = timeString.Substring(0, timeString.Length > 5 ? 2 : 1);
+               String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
+               timesList.Add(hours + ":" + minutes);
             }
             schedule.ItemsSource = timesList;
         }
