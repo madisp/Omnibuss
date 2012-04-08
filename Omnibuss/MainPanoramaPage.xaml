@@ -43,6 +43,16 @@
         <DataTemplate x:Key="MarkerTemplate">
             <TextBlock Text="{Binding}" MaxWidth="100"/>
         </DataTemplate>
+
+        <ControlTemplate x:Key="pinMyLoc" TargetType="my:Pushpin">
+            <Grid Height="26" Width="26" Margin="-13,-13,0,0" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <CompositeTransform Rotation="-45"/>
+                </Grid.RenderTransform>
+                <Rectangle Fill="Black" HorizontalAlignment="Center" Margin="0" Stroke="White" VerticalAlignment="Center" Height="26" Width="26"/>
+                <Ellipse HorizontalAlignment="Center" Height="16" Margin="0" VerticalAlignment="Center" Fill="Yellow" Width="16"/>
+            </Grid>
+        </ControlTemplate>
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot contains the root grid where all other page content is placed-->
@@ -52,7 +62,9 @@
             <!--Panorama item one-->
             <controls:PanoramaItem Header="Peatused">
                 <Grid x:Name="MapPanel" Grid.Row="1">
-                    <my:Map Height="498" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="436" />
+                    <my:Map Height="498" ZoomBarVisibility="Visible" CredentialsProvider="Aj2gDlArPAqNxkeyI11APMNS_g_1RYAj9yJgEXxYcXQB2nU7BWTJQkACS8js5_Kr"  HorizontalAlignment="Left" Name="map1" VerticalAlignment="Top" Width="436">
+                        <my:MapItemsControl x:Name="mapControl" />
+                    </my:Map>
                 </Grid>
             </controls:PanoramaItem>
 

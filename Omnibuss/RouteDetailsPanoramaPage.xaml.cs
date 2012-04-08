@@ -74,6 +74,13 @@ namespace Omnibuss
                     foreach (Stop _stop in stops)
                     {
                         Pushpin pin = addLocationPin(_stop.Latitude, _stop.Longitude, _stop.Name);
+                        int id = _stop.Id;
+
+                        pin.MouseLeftButtonUp += new MouseButtonEventHandler(
+                            (object sender, MouseButtonEventArgs e1) =>
+                            {
+                                NavigationService.Navigate(new Uri("/StopDetailsPanoramaPage.xaml?stopId=" + id, UriKind.Relative));
+                            });
                     }
                 }
             }
