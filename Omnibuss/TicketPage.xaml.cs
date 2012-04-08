@@ -12,6 +12,8 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
 using System.Diagnostics;
+using Microsoft.Phone.Tasks;
+
 
 
 namespace Omnibuss
@@ -35,16 +37,41 @@ namespace Omnibuss
             }
             catch (System.Collections.Generic.KeyNotFoundException ex)
             {
-                 Debug.WriteLine("Oh noes, no values");
+                Debug.WriteLine("Oh noes, no values: " + ex);
             }
             if (isikukood == null || dokNumber == null || isikukood.Length == 0 || dokNumber.Length == 0)
             {
                 Debug.WriteLine("Show inputs: " + isikukood + ", " + dokNumber);
+
                 DataPanel.Visibility = System.Windows.Visibility.Visible;
+                options.Visibility = System.Windows.Visibility.Collapsed;
                 return;
             }
             // TODO present the ticket options here
+            options.MouseLeftButtonDown += new MouseButtonEventHandler(
+                        (object sender, MouseButtonEventArgs e) =>
+                        {
+                            PhoneCallTask callTask = new PhoneCallTask();
+                            callTask.PhoneNumber = "999999";
+                            callTask.DisplayName = "debugMode";
+                            callTask.Show();
+
+                        });
+
+
+            this.Loaded += new RoutedEventHandler(TicketPage_Loaded);
         }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            //Ilmumine.Begin();
+        }
+
+        void TicketPage_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
@@ -54,6 +81,7 @@ namespace Omnibuss
             dokNumber = (string)appSettings["dokNr"];
             Debug.WriteLine("Hei:" + isikukood + " / " + dokNumber + "!");
             DataPanel.Visibility = System.Windows.Visibility.Collapsed;
+            options.Visibility = System.Windows.Visibility.Visible;
         }
     }
 }
