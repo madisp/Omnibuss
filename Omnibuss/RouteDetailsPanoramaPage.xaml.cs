@@ -94,6 +94,14 @@ namespace Omnibuss
                String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
                timesList.Add(String.Format("{0,2:d2}:{1,2:d2}", hours, minutes));
             }
+            if (timesList.Count == 0)
+            {
+                NextTime.Text = "Kahjuks see liin täna rohkem ei sõida.";
+            }
+            else
+            {
+                NextTime.Text = "Buss väljub järgnevatel aegadel:";
+            }
             schedule.ItemsSource = timesList;
         }
 
