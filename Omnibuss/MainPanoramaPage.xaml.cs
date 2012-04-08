@@ -12,15 +12,13 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using System.Diagnostics; //---for Debug.WriteLine()---
 using System.Xml.Linq;
-using System.Linq;
-using System.Collections.Generic;
-using System.Windows.Input;
 using Microsoft.Phone.Controls.Maps.Platform;
 using System.Globalization;
 using MarkerClustering;
-using System.Windows;
 using System.Device.Location;
 using Microsoft.Phone.Controls.Maps;
+using Newtonsoft.Json;
+using Microsoft.Phone.Reactive;
 
 namespace Omnibuss
 {
@@ -33,8 +31,6 @@ namespace Omnibuss
         // Constructor
         public MainPanoramaPage()
         {
-
-
             InitializeComponent();
 
             pins = new List<Pushpin>();
@@ -87,12 +83,7 @@ namespace Omnibuss
                 }
             }
 
-            List<String> ticketList = new List<String>();
-            ticketList.Add("08.04.2012 03:19:03 - 08.04.2012 04:19:03");
-            ticketList.Add("08.04.2012 03:19:03 - 08.04.2012 04:19:03");
-            ticketList.Add("08.04.2012 03:19:03 - 08.04.2012 04:19:03");
-            ticketList.Add("08.04.2012 03:19:03 - 08.04.2012 04:19:03");
-            tickets.ItemsSource = ticketList;
+            LoadTickets();
         }
 
         private void GetRoute(Location src, Location dst)
@@ -121,6 +112,26 @@ namespace Omnibuss
             // Make the CalculateRoute asnychronous request.
             routeService.CalculateRouteAsync(routeRequest);
 
+        }
+
+        private void LoadTickets()
+        {
+            var w = new WebClient();
+            Observable.FromEvent<DownloadStringCompletedEventArgs>(w, "DownloadStringCompleted").Subscribe(r =>
+              {
+                  Debug.WriteLine("JOTSON: " + r.EventArgs.Result);
+                  try
+                  {
+                      var deserialized = JsonConvert.DeserializeObject<List<Ticket>>(r.EventArgs.Result);
+                      tickets.ItemsSource = deserialized;
+                  }
+                  catch (Exception)
+                  {
+                      Debug.WriteLine("Okou..");
+                  }
+              });
+            w.DownloadStringAsync(new Uri("http://office.mobi.ee/~sigmar/pilet.txt"));
+            //w.DownloadStringAsync(new Uri("http://office.mobi.ee/~sigmar/ticket.php?id_code=A1668485"));
         }
 
         private void routeService_CalculateRouteCompleted(object sender, RouteService.CalculateRouteCompletedEventArgs e)
