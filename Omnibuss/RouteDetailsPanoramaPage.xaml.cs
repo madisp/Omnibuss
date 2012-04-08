@@ -151,7 +151,7 @@ namespace Omnibuss
                     {
                         NextTime.Text = "Kahjuks see liin täna rohkem ei sõida.";
                     }
-                    else
+                    else if (myLocation != null)
                     {
                         DateTime now = DateTime.Now;
                         int diff = (int)times[0].Departure_time - (now.Hour * 10000 + now.Minute * 100 + now.Second);
@@ -174,11 +174,11 @@ namespace Omnibuss
                         string warningText = "";
                         if (distanceKm > (10 * timeInHours))
                         {
-                            warningText = " (You'll not make it)";
+                            warningText = " (Sinna bussile sa enam ei jõua. Kurb)";
                         }
                         else if (distanceKm < (10 * timeInHours) && distanceKm > (5 * timeInHours))
                         {
-                            warningText = " (Run, you can still make it!)";
+                            warningText = " (Jookse, sa jõuad veel!)";
                         }
                         NextTime.Text = "Buss väljub järgnevatel aegadel" + warningText + ":";
 
