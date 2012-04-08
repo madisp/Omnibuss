@@ -38,7 +38,9 @@ namespace Omnibuss
             {
                 Debug.WriteLine("Show inputs: " + isikukood + ", " + dokNumber);
                 DataPanel.Visibility = System.Windows.Visibility.Visible;
+                return;
             }
+            // TODO present the ticket options here
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
