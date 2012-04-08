@@ -71,7 +71,7 @@
             <Grid.RenderTransform>
                 <CompositeTransform TranslateX="0"/>
             </Grid.RenderTransform>
-            <Grid x:Name="DataPanel" Grid.Row="1" Margin="0" RenderTransformOrigin="0.5,0.5">
+            <Grid x:Name="DataPanel" Grid.Row="1" Margin="0" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
                 <Grid.RenderTransform>
                     <CompositeTransform/>
                 </Grid.RenderTransform>
@@ -81,11 +81,11 @@
                 <TextBlock Height="30" HorizontalAlignment="Left" Margin="12,1,0,0" x:Name="textBlock1" Text="Isikukood" VerticalAlignment="Top" />
                 <TextBlock Height="30" HorizontalAlignment="Left" Margin="12,98,0,0" x:Name="textBlock2" Text="Dokumendi nr" VerticalAlignment="Top" />
             </Grid>
-            <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" Name="options" VerticalAlignment="Top" Width="460">
+            <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" Name="options" VerticalAlignment="Top" Width="460" SelectionChanged="tickets_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                        <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeExtraLarge}" />
                             <TextBlock VerticalAlignment="Center" Text="{Binding Price}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeMedium}" />
                         </StackPanel>
                     </DataTemplate>
