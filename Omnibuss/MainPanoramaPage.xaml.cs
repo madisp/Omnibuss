@@ -143,6 +143,11 @@ namespace Omnibuss
             return pin;
         }
 
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 
     public class MyMapMode : Microsoft.Phone.Controls.Maps.RoadMode
