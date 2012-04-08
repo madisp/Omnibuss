@@ -55,7 +55,7 @@ namespace Omnibuss
             return (from trip in db.Trips where trip.Route_id.Equals(route.Route_id) select trip).ToList();
         }
 
-        public Trip GetMaxTripByRoute(Route route)
+        public Trip GetMaxTripByRoute(Route route, int direction)
         {
             var trips =
                 from trip in db.Trips
@@ -64,7 +64,7 @@ namespace Omnibuss
                     where stop_time.Trip_id == trip.Trip_id
                     select stop_time.Stop_id
                 ).Count()
-                where trip.Route_id == route.Route_id
+                where trip.Route_id == route.Route_id && trip.Direction == direction
                 orderby sCount descending
                 select new { Trip = trip, Count = sCount };
             return trips.Take(1).Single().Trip;

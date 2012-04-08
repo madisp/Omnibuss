@@ -62,13 +62,17 @@ namespace Omnibuss
             OmnibussModel model = new OmnibussModel();
 
             Route route = model.GetRoute(routeId);
-            Trip trip = model.GetMaxTripByRoute(route);
-            Debug.WriteLine("TripID: " + trip.Trip_id);
-            List<Stop> stops = model.GetStopsByTrip(trip);
-            GetRoute(stops);
-            foreach (Stop stop in stops)
+
+            for (int i = 0; i < 2; i++)
             {
-                Pushpin pin = addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
+                Trip trip = model.GetMaxTripByRoute(route, i);
+                Debug.WriteLine("TripID: " + trip.Trip_id);
+                List<Stop> stops = model.GetStopsByTrip(trip);
+                GetRoute(stops);
+                foreach (Stop stop in stops)
+                {
+                    Pushpin pin = addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
+                }
             }
             Panorama.Title = route;
 
