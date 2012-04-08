@@ -50,7 +50,11 @@
                                         <Grid.Background>
                                             <SolidColorBrush Color="{StaticResource PhoneAccentColor}" />
                                         </Grid.Background>
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Route_short_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Route_short_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}">
+                                            <TextBlock.Foreground>
+                                                <SolidColorBrush Color="White"/>
+                                            </TextBlock.Foreground>
+                                        </TextBlock>
                                     </Grid>
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Route_long_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
                                 </StackPanel>
