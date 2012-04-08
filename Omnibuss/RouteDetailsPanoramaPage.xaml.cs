@@ -123,8 +123,10 @@ namespace Omnibuss
             routeRequest.Options.RoutePathType = RouteService.RoutePathType.Points;
 
             routeRequest.Waypoints = new System.Collections.ObjectModel.ObservableCollection<RouteService.Waypoint>();
-            foreach (Stop stop in stops)
+            int max = stops.Count() > 25 ? 25 : stops.Count();
+            for (int i = 0; i < max; i++)
             {
+                Stop stop = stops.ElementAt(i);
                 RouteService.Waypoint srcWaypoint = new RouteService.Waypoint();
                 srcWaypoint.Location = new GeoCoordinate((double)stop.Latitude, (double)stop.Longitude);
                 routeRequest.Waypoints.Add(srcWaypoint);
