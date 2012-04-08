@@ -52,8 +52,11 @@
     <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
     <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="Microsoft.Phone.Reactive" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="system.data.linq" />
     <Reference Include="System.Device" />
+    <Reference Include="System.Observable" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Servicemodel.Web" />
@@ -88,6 +91,7 @@
     <Compile Include="StopDetailsPanoramaPage.xaml.cs">
       <DependentUpon>StopDetailsPanoramaPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Ticket.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -126,6 +130,7 @@
     <None Include="Service References\RouteService\route.wsdl" />
     <None Include="Service References\RouteService\route.xsd" />
     <None Include="Service References\RouteService\service.xsd" />
+    <Content Include="Newtonsoft.Json.dll" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>
