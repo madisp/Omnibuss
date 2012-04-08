@@ -67,7 +67,7 @@ namespace Omnibuss
             Stop stop = model.GetStop(stopId);
             Route route = model.GetRoute(routeId);
 
-            List<String> timesList = new List<String>();
+            List<Stop_time> times;
             List<List<Stop>> stopsList = new List<List<Stop>>();
 
             ProgressIndicator progress = new ProgressIndicator();
@@ -90,21 +90,14 @@ namespace Omnibuss
                         }
                     }
 
-                    List<Stop_time> times = model.GetTimesByRouteAndStop(route, stop);
-                    foreach (var time in times)
-                    {
-                        String timeString = time.Departure_time.ToString();
-                        String hours = timeString.Substring(0, timeString.Length > 5 ? 2 : 1);
-                        String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
-                        timesList.Add(String.Format("{0,2:d2}:{1,2:d2}", hours, minutes));
-                    }
+                    times.AddRange(model.GetTimesByRouteAndStop(route, stop));
                     
                 }
             );
             bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
                 (sender, args) =>
                 {
-                    if (timesList.Count == 0)
+                    if (times.Count == 0)
                     {
                         NextTime.Text = "Kahjuks see liin täna rohkem ei sõida.";
                     }
@@ -112,7 +105,18 @@ namespace Omnibuss
                     {
                         // TEMP
                         Location myLocation = new Location();
-                        double timeInHours = 0;
+
+                        DateTime now = DateTime.Now;
+                        int diff = (int)times[0].Departure_time - (now.Hour * 10000 + now.Minute * 100 + now.Second);
+
+                        double _diff = 0.0;
+                        _diff += diff % 100;
+                        diff /= 100;
+                        _diff += (diff % 100) * 60;
+                        diff /= 100;
+                        _diff += (diff % 100) * 60;
+
+                        double timeInHours = _diff / 3600.0;
                         // TEMP END
 
                         NextTime.Text = "Buss väljub järgnevatel aegadel:";
@@ -132,6 +136,17 @@ namespace Omnibuss
                         NextTime.Text = "Buss väljub järgnevatel aegadel" + warningText + ":";
 
                     }
+
+                    var timesList = new List<String>();
+                    
+                    foreach (var time in times)
+                    {
+                        String timeString = time.Departure_time.ToString();
+                        String hours = timeString.Substring(0, timeString.Length > 5 ? 2 : 1);
+                        String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
+                        timesList.Add(String.Format("{0,2:d2}:{1,2:d2}", hours, minutes));
+                    }
+
                     schedule.ItemsSource = timesList;
                     foreach (var stops in stopsList)
                     {
