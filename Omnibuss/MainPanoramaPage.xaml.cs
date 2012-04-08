@@ -19,6 +19,8 @@ using System.Device.Location;
 using Microsoft.Phone.Controls.Maps;
 using Newtonsoft.Json;
 using Microsoft.Phone.Reactive;
+using Microsoft.Phone.Shell;
+using System.IO.IsolatedStorage;
 
 namespace Omnibuss
 {
@@ -76,27 +78,60 @@ namespace Omnibuss
                 }
             }
 
+            
             LoadTickets();
         }
 
         private void LoadTickets()
         {
+            Debug.WriteLine("LoadTickets()");
+
+            String idCode;
+            String documentCode = "";
+            if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue<String>("idCode", out idCode))
+            {
+                Debug.WriteLine("No id code present, skipping tickets");
+                return;
+            }
+            if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue<String>("documentCode", out documentCode))
+            {
+                Debug.WriteLine("No document code present, skipping tickets");
+                return;
+            }
+
             var w = new WebClient();
-            Observable.FromEvent<DownloadStringCompletedEventArgs>(w, "DownloadStringCompleted").Subscribe(r =>
-              {
-                  Debug.WriteLine("JOTSON: " + r.EventArgs.Result);
-                  try
-                  {
-                      var deserialized = JsonConvert.DeserializeObject<List<Ticket>>(r.EventArgs.Result);
-                      tickets.ItemsSource = deserialized;
-                  }
-                  catch (Exception)
-                  {
-                      Debug.WriteLine("Okou..");
-                  }
-              });
-            w.DownloadStringAsync(new Uri("http://office.mobi.ee/~sigmar/pilet.txt"));
-            //w.DownloadStringAsync(new Uri("http://office.mobi.ee/~sigmar/ticket.php?id_code=A1668485"));
+            try
+            {
+                Observable.FromEvent<DownloadStringCompletedEventArgs>(w, "DownloadStringCompleted").Subscribe(r =>
+                {
+                    try
+                    {
+                        Debug.WriteLine("JSON: " + r.EventArgs.Result);
+                        var deserialized = JsonConvert.DeserializeObject<List<Ticket>>(r.EventArgs.Result);
+                        if (deserialized != null && deserialized.Count() > 0)
+                        {
+                            noTickets.Visibility = Visibility.Collapsed;
+                            tickets.Visibility = Visibility.Visible;
+                            tickets.ItemsSource = deserialized;
+                        }
+                        else
+                        {
+                            noTickets.Visibility = Visibility.Visible;
+                            tickets.Visibility = Visibility.Collapsed;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Debug.WriteLine("Could not read/parse JSON..");
+                    }
+                });
+                //w.DownloadStringAsync(new Uri("http://office.mobi.ee/~sigmar/pilet2.txt"));
+                w.DownloadStringAsync(new Uri("http://office.mobi.ee/~sigmar/ticket.php?document_code=" + documentCode));
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("Ticket info unavailable");
+            }
         }
 
         void watcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
@@ -143,11 +178,10 @@ namespace Omnibuss
             return pin;
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void BuyTicket_Click(object sender, RoutedEventArgs e)
         {
-
+            NavigationService.Navigate(new Uri("/TicketPage.xaml", UriKind.Relative));
         }
-
     }
 
     public class MyMapMode : Microsoft.Phone.Controls.Maps.RoadMode

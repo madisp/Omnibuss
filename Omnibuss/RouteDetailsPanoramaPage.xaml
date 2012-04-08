@@ -50,11 +50,11 @@
             <controls:Panorama.TitleTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="0,77,0,0">
-                        <Grid>
+                        <Grid Width="130" Height="130">
                             <Grid.Background>
                                 <SolidColorBrush Color="{StaticResource PhoneAccentColor}" />
                             </Grid.Background>
-                            <TextBlock Name="LineNumber" VerticalAlignment="Center" Text="{Binding Route_short_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100" />
+                            <TextBlock Name="LineNumber" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Route_short_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100" />
                         </Grid>
                         <TextBlock Name="LineName" VerticalAlignment="Center" Text="{Binding Route_long_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="100"/>
                     </StackPanel>
