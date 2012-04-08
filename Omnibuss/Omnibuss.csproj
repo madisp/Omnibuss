@@ -69,8 +69,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="MainPanoramaPage.xaml.cs">
+      <DependentUpon>MainPanoramaPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="OmnibussData.cs" />
     <Compile Include="OmnibussModel.cs" />
@@ -94,7 +94,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
+    <Page Include="MainPanoramaPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

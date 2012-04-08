@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
-using System.Device.Location;
-using Microsoft.Phone.Controls.Maps;
 using System.Diagnostics; //---for Debug.WriteLine()---
 using System.Xml.Linq;
 using System.Linq;
@@ -14,17 +19,19 @@ using Microsoft.Phone.Controls.Maps.Platform;
 using System.Globalization;
 using MarkerClustering;
 using System.Windows;
+using System.Device.Location;
+using Microsoft.Phone.Controls.Maps;
 
 namespace Omnibuss
 {
-    public partial class MainPage : PhoneApplicationPage
+    public partial class MainPanoramaPage : PhoneApplicationPage
     {
         GeoCoordinateWatcher watcher;
 
         List<Pushpin> pins;
 
         // Constructor
-        public MainPage()
+        public MainPanoramaPage()
         {
 
 
@@ -79,6 +86,13 @@ namespace Omnibuss
                         });
                 }
             }
+
+            List<String> ticketList = new List<String>();
+            ticketList.Add("08.04.2012 03:19:03 - 08.04.2012 04:19:03");
+            ticketList.Add("08.04.2012 03:19:03 - 08.04.2012 04:19:03");
+            ticketList.Add("08.04.2012 03:19:03 - 08.04.2012 04:19:03");
+            ticketList.Add("08.04.2012 03:19:03 - 08.04.2012 04:19:03");
+            tickets.ItemsSource = ticketList;
         }
 
         private void GetRoute(Location src, Location dst)
@@ -198,5 +212,4 @@ namespace Omnibuss
             return MapZoomRange;
         }
     }
-
 }
