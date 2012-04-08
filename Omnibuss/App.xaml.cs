@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using System.Diagnostics;
 
 namespace Omnibuss
 {
@@ -98,6 +99,7 @@ namespace Omnibuss
         {
             if (System.Diagnostics.Debugger.IsAttached)
             {
+                Debug.WriteLine(e.ExceptionObject.StackTrace);
                 // An unhandled exception has occurred; break into the debugger
                 System.Diagnostics.Debugger.Break();
             }
@@ -116,7 +118,7 @@ namespace Omnibuss
 
             // Create the frame but don't set it as RootVisual yet; this allows the splash
             // screen to remain active until the application is ready to render.
-            RootFrame = new PhoneApplicationFrame();
+            RootFrame = new TransitionFrame();
             RootFrame.Navigated += CompleteInitializePhoneApplication;
 
             // Handle navigation failures

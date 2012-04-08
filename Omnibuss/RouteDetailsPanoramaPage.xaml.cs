@@ -38,29 +38,29 @@ namespace Omnibuss
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            String idString = "";
-            if (!NavigationContext.QueryString.TryGetValue("stopId", out idString))
+            String stopIdStr, routeIdStr;
+            if (!NavigationContext.QueryString.TryGetValue("stopId", out stopIdStr))
             {
                 Debug.WriteLine("No stop ID provided!");
                 NavigationService.GoBack();
                 return;
             }
-
-            UInt32 stopId = UInt32.Parse(idString);
-            Debug.WriteLine("Stop id: " + stopId);
-
-            if (!NavigationContext.QueryString.TryGetValue("routeId", out idString))
+            
+            if (!NavigationContext.QueryString.TryGetValue("routeId", out routeIdStr))
             {
                 Debug.WriteLine("No route ID provided!");
                 NavigationService.GoBack();
                 return;
             }
 
-            UInt32 routeId = UInt32.Parse(idString);
+            UInt32 stopId = UInt32.Parse(stopIdStr);
+            Debug.WriteLine("Stop id: " + stopId);
+            UInt32 routeId = UInt32.Parse(routeIdStr);
             Debug.WriteLine("Route id: " + routeId);
 
             OmnibussModel model = new OmnibussModel();
 
+            Stop stop = model.GetStop(stopId);
             Route route = model.GetRoute(routeId);
 
             for (int i = 0; i < 2; i++)
@@ -69,23 +69,27 @@ namespace Omnibuss
                 Debug.WriteLine("TripID: " + trip.Trip_id);
                 List<Stop> stops = model.GetStopsByTrip(trip);
                 GetRoute(stops);
-                foreach (Stop stop in stops)
+                foreach (Stop _stop in stops)
                 {
-                    Pushpin pin = addLocationPin(stop.Latitude, stop.Longitude, stop.Name);
+                    Pushpin pin = addLocationPin(_stop.Latitude, _stop.Longitude, _stop.Name);
                 }
             }
             Panorama.Title = route;
 
             List<String> timesList = new List<String>();
-            timesList.Add("12:00");
-            timesList.Add("12:25");
-            timesList.Add("12:50");
-            timesList.Add("13:15");
-            timesList.Add("13:40");
-            timesList.Add("14:05");
-            timesList.Add("14:30");
-            timesList.Add("14:55");
-            timesList.Add("15:20");
+            //timesList.Add("12:00");
+            //timesList.Add("12:25");
+            //timesList.Add("12:50");
+            //timesList.Add("13:15");
+            //timesList.Add("13:40");
+            //timesList.Add("14:05");
+            //timesList.Add("14:30");
+            //timesList.Add("14:55");
+            //timesList.Add("15:20");
+            List<Stop_time> times = model.GetTimesByRouteAndStop(route, stop);
+            foreach (var time in times) {
+               timesList.Add(time.Departure_time.ToString());
+            }
             schedule.ItemsSource = timesList;
         }
 
@@ -119,8 +123,10 @@ namespace Omnibuss
             routeRequest.Options.RoutePathType = RouteService.RoutePathType.Points;
 
             routeRequest.Waypoints = new System.Collections.ObjectModel.ObservableCollection<RouteService.Waypoint>();
-            foreach (Stop stop in stops)
+            int max = stops.Count() > 25 ? 25 : stops.Count();
+            for (int i = 0; i < max; i++)
             {
+                Stop stop = stops.ElementAt(i);
                 RouteService.Waypoint srcWaypoint = new RouteService.Waypoint();
                 srcWaypoint.Location = new GeoCoordinate((double)stop.Latitude, (double)stop.Longitude);
                 routeRequest.Waypoints.Add(srcWaypoint);
