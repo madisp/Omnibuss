@@ -92,6 +92,9 @@
       <DependentUpon>StopDetailsPanoramaPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Ticket.cs" />
+    <Compile Include="TicketPage.xaml.cs">
+      <DependentUpon>TicketPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -109,6 +112,10 @@
     <Page Include="StopDetailsPanoramaPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TicketPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

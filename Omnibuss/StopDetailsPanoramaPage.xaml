@@ -25,13 +25,13 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Grid Margin="3" Width="70" Height="70">
+                                    <Grid Margin="3" Width="75" Height="75" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Grid.Background>
                                             <SolidColorBrush Color="{StaticResource PhoneAccentColor}" />
                                         </Grid.Background>
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Route_short_name}" Width="35" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Route_short_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
                                     </Grid>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Route_long_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Route_long_name}" Style="{StaticResource PhoneTextNormalStyle}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
