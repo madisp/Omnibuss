@@ -45,7 +45,7 @@ namespace Omnibuss
                 NavigationService.GoBack();
                 return;
             }
-            
+
             if (!NavigationContext.QueryString.TryGetValue("routeId", out routeIdStr))
             {
                 Debug.WriteLine("No route ID provided!");
@@ -87,12 +87,14 @@ namespace Omnibuss
 
             List<String> timesList = new List<String>();
             List<Stop_time> times = model.GetTimesByRouteAndStop(route, stop);
-            foreach (var time in times) 
+           
+            DateTime dateTime = DateTime.Now;
+            foreach (var time in times)
             {
-               String timeString = time.Departure_time.ToString();
-               String hours = timeString.Substring(0, timeString.Length > 5 ? 2 : 1);
-               String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
-               timesList.Add(String.Format("{0,2:d2}:{1,2:d2}", hours, minutes));
+                String timeString = time.Departure_time.ToString();
+                String hours = timeString.Substring(0, timeString.Length > 5 ? 2 : 1);
+                String minutes = timeString.Substring(timeString.Length > 5 ? 2 : 1, 2);
+                timesList.Add(String.Format("{0,2:d2}:{1,2:d2}", hours, minutes));
             }
             if (timesList.Count == 0)
             {
@@ -100,10 +102,44 @@ namespace Omnibuss
             }
             else
             {
+                // TEMP
+                Location myLocation = new Location();
+                double timeInHours = 0;
+                // TEMP END
+
                 NextTime.Text = "Buss väljub järgnevatel aegadel:";
+                Location stopLocation = new Location();
+                stopLocation.Latitude = (double)stop.Latitude;
+                stopLocation.Longitude = (double)stop.Longitude;
+                double distanceKm = calculateDistance(myLocation, stopLocation);
+                string warningText = "";
+                if (distanceKm > (10 * timeInHours))
+                {
+                    warningText = " (You'll not make it)";
+                }
+                else if (distanceKm < (10 * timeInHours) && distanceKm > (5 * timeInHours))
+                {
+                    warningText = " (Run, you can still make it!)";
+                }
+                NextTime.Text = "Buss väljub järgnevatel aegadel" + warningText + ":";
+
             }
             schedule.ItemsSource = timesList;
         }
+
+        private double calculateDistance(Location l1, Location l2)
+        {
+            double e = (3.1415926538 * l1.Latitude / 180);
+            double f = (3.1415926538 * l1.Longitude / 180);
+            double g = (3.1415926538 * l2.Latitude / 180);
+            double h = (3.1415926538 * l2.Longitude / 180);
+            double i = (Math.Cos(e) * Math.Cos(g) * Math.Cos(f) * Math.Cos(h) + Math.Cos(e) * Math.Sin(f) * Math.Cos(g) * Math.Sin(h) + Math.Sin(e) * Math.Sin(g));
+            double j = (Math.Acos(i));
+            double k = (6371 * j);
+
+            return k;
+        }
+
 
         Pushpin addLocationPin(double? latitude, double? longitude, object content)
         {
