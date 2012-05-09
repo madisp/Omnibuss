@@ -288,36 +288,38 @@ namespace Omnibuss
 
         private void routeService_CalculateRouteCompleted(object sender, RouteService.CalculateRouteCompletedEventArgs e)
         {
-
-            // If the route calculate was a success and contains a route, then draw the route on the map.
-            if ((e.Result.ResponseSummary.StatusCode == RouteService.ResponseStatusCode.Success) & (e.Result.Result.Legs.Count != 0))
+            if (e.Error == null)
             {
-                // Set properties of the route line you want to draw.
-                Color routeColor = Colors.Blue;
-                SolidColorBrush routeBrush = new SolidColorBrush(routeColor);
-                MapPolyline routeLine = new MapPolyline();
-                routeLine.Locations = new LocationCollection();
-                routeLine.Stroke = routeBrush;
-                routeLine.Opacity = 0.65;
-                routeLine.StrokeThickness = 5.0;
-
-                // Retrieve the route points that define the shape of the route.
-                foreach (Location p in e.Result.Result.RoutePath.Points)
+                // If the route calculate was a success and contains a route, then draw the route on the map.
+                if ((e.Result.ResponseSummary.StatusCode == RouteService.ResponseStatusCode.Success) & (e.Result.Result.Legs.Count != 0))
                 {
-                    Location location = new Location();
-                    location.Latitude = p.Latitude;
-                    location.Longitude = p.Longitude;
-                    routeLine.Locations.Add(location);
+                    // Set properties of the route line you want to draw.
+                    Color routeColor = Colors.Blue;
+                    SolidColorBrush routeBrush = new SolidColorBrush(routeColor);
+                    MapPolyline routeLine = new MapPolyline();
+                    routeLine.Locations = new LocationCollection();
+                    routeLine.Stroke = routeBrush;
+                    routeLine.Opacity = 0.65;
+                    routeLine.StrokeThickness = 5.0;
+
+                    // Retrieve the route points that define the shape of the route.
+                    foreach (Location p in e.Result.Result.RoutePath.Points)
+                    {
+                        Location location = new Location();
+                        location.Latitude = p.Latitude;
+                        location.Longitude = p.Longitude;
+                        routeLine.Locations.Add(location);
+                    }
+
+                    // Add a map layer in which to draw the route.
+                    MapLayer myRouteLayer = new MapLayer();
+                    map1.Children.Add(myRouteLayer);
+
+                    // Add the route line to the new layer.
+                    myRouteLayer.Children.Add(routeLine);
+
+
                 }
-
-                // Add a map layer in which to draw the route.
-                MapLayer myRouteLayer = new MapLayer();
-                map1.Children.Add(myRouteLayer);
-
-                // Add the route line to the new layer.
-                myRouteLayer.Children.Add(routeLine);
-
-
             }
         }
     }
